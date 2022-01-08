@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/mohsen/DSProject/DsProject/Drug/Drug.csproj": {}
+    "/home/mohsen/DsProject/Drug/Drug.csproj": {}
   },
   "projects": {
-    "/home/mohsen/DSProject/DsProject/Drug/Drug.csproj": {
+    "/home/mohsen/DsProject/Drug/Drug.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/mohsen/DSProject/DsProject/Drug/Drug.csproj",
+        "projectUniqueName": "/home/mohsen/DsProject/Drug/Drug.csproj",
         "projectName": "Drug",
-        "projectPath": "/home/mohsen/DSProject/DsProject/Drug/Drug.csproj",
+        "projectPath": "/home/mohsen/DsProject/Drug/Drug.csproj",
         "packagesPath": "/home/mohsen/.nuget/packages/",
-        "outputPath": "/home/mohsen/DSProject/DsProject/Drug/obj/",
+        "outputPath": "/home/mohsen/DsProject/Drug/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/mohsen/.nuget/NuGet/NuGet.Config"
