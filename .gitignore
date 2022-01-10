@@ -1,3 +1,4 @@
 obj/
 Drug.csproj
 bin/
+.vscode
