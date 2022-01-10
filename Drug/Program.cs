@@ -155,6 +155,26 @@ class Program
             else
             {
                 System.Console.WriteLine(disease.name);
+                if (disease.Drug_yes != null)
+                {
+                    System.Console.Write("Drug_yes: ");
+                    for (int i = 0; i < disease.Drug_yes.Length; i++)
+                    {
+                        System.Console.Write(disease.Drug_yes[i]);
+                        System.Console.Write(", ");
+                    }
+                    System.Console.WriteLine("");                    
+                }
+                if (disease.Drug_no != null)
+                {
+                    System.Console.Write("Drug_no: ");
+                    for (int i = 0; i < disease.Drug_no.Length; i++)
+                    {
+                        System.Console.Write(disease.Drug_no[i]);
+                        System.Console.Write(", ");
+                    }
+                    System.Console.WriteLine("");                    
+                }
             }
         }
 
@@ -170,6 +190,38 @@ class Program
             {
                 NEW.next = first;
                 first = NEW;
+            }
+        }
+
+        public void add_alergie(string[] alergies)
+        {
+            for (int i = 0; i < alergies.Length; i++)
+            {
+                List<string> drug_yes = new List<string>();
+                List<string> drug_no = new List<string>();
+
+                string[] drug_and_alergie = alergies[i].Split(" : "); 
+                Disease disease = find(drug_and_alergie[0]);
+                if (disease == null)
+                {
+                    break;
+                }
+                string[] alergie = drug_and_alergie[1].Split(" ; ");
+
+                for (int j = 0; j < alergie.Length; j++)
+                {
+                    string[] al = alergie[j].Substring(1,17).Split(",");
+                    if (al[1] == "+")
+                    {
+                        drug_yes.Add(al[0]);
+                    }
+                    else
+                    {
+                        drug_no.Add(al[0]);
+                    }
+                }
+                disease.Drug_yes = drug_yes.ToArray();
+                disease.Drug_no = drug_no.ToArray();
             }
         }
 
@@ -217,15 +269,18 @@ class Program
         DrugStore DStore = new DrugStore();
         DStore.create_drug_store(drugs);
         DStore.read("Drug_ucxnqwcpsf");
+        // bug of last Drug
         DStore.delete("Drug_ucxnqwcpsf");
         DStore.read("Drug_ucxnqwcpsf");
 
         AllDisease Diseases = new AllDisease();
         Diseases.create_disease(diseases);
+        Diseases.add_alergie(alergies);
         Diseases.read("Dis_xmbjdyijco");
-        Diseases.read("Dis_iyddqpgqxd");
-        Diseases.delete("Dis_iyddqpgqxd");
-        Diseases.read("Dis_iyddqpgqxd");
+        Diseases.read("Dis_iuirckvjxb");
+        Diseases.delete("Dis_iuirckvjxb");
+        Diseases.read("Dis_iuirckvjxb");
+        // bug of last Dis
         Diseases.delete("Dis_xmbjdyijco");
         Diseases.read("Dis_xmbjdyijco");
 
