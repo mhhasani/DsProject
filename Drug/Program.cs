@@ -318,6 +318,20 @@ class Program
                 }
             }
         }
+        public void save()
+        {
+            File.Delete(@"../datasets/diseases.txt");
+            StreamWriter sw = new StreamWriter(@"../datasets/diseases.txt");
+
+            for (int i = 0; i < diseases.Length; i++)
+            {
+                if (diseases[i] != "")
+                {
+                    sw.WriteLine(diseases[i]);
+                }
+            }
+            sw.Close();            
+        }
 
         public void delete(string name)
         {
@@ -344,6 +358,7 @@ class Program
                 }
                 c.next = to_delete.next;
                 delete_from_array(name);
+                save();
             }
         }
     }
@@ -372,8 +387,8 @@ class Program
         Diseases.delete("Dis_iuirckvjxb");
         Diseases.read("Dis_iuirckvjxb");
         Diseases.read("Dis_jqgyngvqrc");
-        Diseases.delete("Dis_xmbjdyijco");
-        Diseases.read("Dis_xmbjdyijco");
+        Diseases.delete("Dis_jqgyngvqrc");
+        Diseases.read("Dis_jqgyngvqrc");
 
 
         System.Console.WriteLine("--------------");
