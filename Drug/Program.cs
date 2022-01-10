@@ -300,7 +300,6 @@ class Program
 
         public void delete_from_array(string name)
         {
-            Disease to_delete = find(name);
             for (int i = 0; i < diseases.Length; i++)
             {
                 if (diseases[i] == name)
@@ -315,6 +314,7 @@ class Program
                 if (alergie_and_dis[0] == name)
                 {
                     alergies[i] = "";
+                    break;
                 }
             }
         }
@@ -341,7 +341,9 @@ class Program
                     sw_al.WriteLine(alergies[i]);
                 }
             }
-            sw_al.Close();            
+            sw_al.Close();  
+            diseases = System.IO.File.ReadAllLines(@"../datasets/diseases.txt");
+            alergies = System.IO.File.ReadAllLines(@"../datasets/alergies.txt");       
         }
 
         public void delete(string name)
@@ -358,6 +360,8 @@ class Program
                 if (to_delete.name == first.name)
                 {
                     first = to_delete.next;
+                    delete_from_array(name);
+                    save();
                     return;
                 }
                 Disease current = first;
@@ -397,9 +401,9 @@ class Program
         Diseases.read("Dis_iuirckvjxb");
         Diseases.delete("Dis_iuirckvjxb");
         Diseases.read("Dis_iuirckvjxb");
-        Diseases.read("Dis_jqgyngvqrc");
-        Diseases.delete("Dis_jqgyngvqrc");
-        Diseases.read("Dis_jqgyngvqrc");
+        Diseases.read("Dis_xmbjdyijco");
+        Diseases.delete("Dis_xmbjdyijco");
+        Diseases.read("Dis_xmbjdyijco");
 
 
         System.Console.WriteLine("--------------");
