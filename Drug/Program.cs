@@ -321,16 +321,27 @@ class Program
         public void save()
         {
             File.Delete(@"../datasets/diseases.txt");
-            StreamWriter sw = new StreamWriter(@"../datasets/diseases.txt");
+            File.Delete(@"../datasets/alergies.txt");
+            StreamWriter sw_dis = new StreamWriter(@"../datasets/diseases.txt");
+            StreamWriter sw_al = new StreamWriter(@"../datasets/alergies.txt");
 
             for (int i = 0; i < diseases.Length; i++)
             {
                 if (diseases[i] != "")
                 {
-                    sw.WriteLine(diseases[i]);
+                    sw_dis.WriteLine(diseases[i]);
                 }
             }
-            sw.Close();            
+            sw_dis.Close(); 
+
+            for (int i = 0; i < alergies.Length; i++)
+            {
+                if (alergies[i] != "")
+                {
+                    sw_al.WriteLine(alergies[i]);
+                }
+            }
+            sw_al.Close();            
         }
 
         public void delete(string name)
