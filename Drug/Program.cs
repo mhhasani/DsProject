@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+
 class Program 
 {
     class Drug 
@@ -193,24 +195,116 @@ class Program
             }
         }
 
-        public void add_alergie(string[] alergies)
+        // public void add_alergie(string alergie_data)
+        // {
+        //     List<string> drug_yes = new List<string>();
+        //     List<string> drug_no = new List<string>();
+        //     string[] dis_and_alergie;
+        //     string[] alergie; 
+        //     Disease disease;
+
+        //     drug_yes = new List<string>();
+        //     drug_no = new List<string>();
+
+        //     dis_and_alergie = alergie_data.Split(" : ");
+        //     disease = find(dis_and_alergie[0]);
+
+        //     if (disease == null)
+        //     {
+        //         System.Console.WriteLine("disease not found!");
+        //         return;
+        //     }
+
+        //     alergie = dis_and_alergie[1].Split(" ; ");
+        //     string[] al;
+        //     for (int j = 0; j < alergie.Length; j++)
+        //     {
+        //         al = alergie[j].Substring(1,17).Split(",");
+        //         if (al[1] == "+")
+        //         {
+        //             drug_yes.Add(al[0]);
+        //         }
+        //         else
+        //         {
+        //             drug_no.Add(al[0]);
+        //         }
+        //     }
+        //     disease.Drug_yes = drug_yes.ToArray();
+        //     disease.Drug_no = drug_no.ToArray();
+        // }
+
+        public void add_alergie(string[] alergies, string name)
         {
+            Disease disease = find(name);
+            if (disease == null)
+            {
+                System.Console.WriteLine("disease not found!");
+                return;
+            }
+
+            System.Console.WriteLine("add alergies...");
+            List<string> drug_yes = new List<string>();
+            List<string> drug_no = new List<string>();
+            string[] dis_and_alergie;
+            string[] alergie; 
+
             for (int i = 0; i < alergies.Length; i++)
             {
-                List<string> drug_yes = new List<string>();
-                List<string> drug_no = new List<string>();
+                drug_yes = new List<string>();
+                drug_no = new List<string>();
 
-                string[] drug_and_alergie = alergies[i].Split(" : "); 
-                Disease disease = find(drug_and_alergie[0]);
+                dis_and_alergie = alergies[i].Split(" : ");
+
+                if (dis_and_alergie[0] != name)
+                {
+                    continue;
+                }
+
+                alergie = dis_and_alergie[1].Split(" ; ");
+                string[] al;
+                for (int j = 0; j < alergie.Length; j++)
+                {
+                    al = alergie[j].Substring(1,17).Split(",");
+                    if (al[1] == "+")
+                    {
+                        drug_yes.Add(al[0]);
+                    }
+                    else
+                    {
+                        drug_no.Add(al[0]);
+                    }
+                }
+                disease.Drug_yes = drug_yes.ToArray();
+                disease.Drug_no = drug_no.ToArray();
+            }
+        }
+
+        public void add_all_alergies(string[] alergies)
+        {
+            System.Console.WriteLine("add alergies...");
+            List<string> drug_yes = new List<string>();
+            List<string> drug_no = new List<string>();
+            string[] dis_and_alergie;
+            string[] alergie; 
+            Disease disease;
+
+            for (int i = 0; i < alergies.Length; i++)
+            {
+                drug_yes = new List<string>();
+                drug_no = new List<string>();
+
+                dis_and_alergie = alergies[i].Split(" : ");
+                disease = find(dis_and_alergie[0]);
+
                 if (disease == null)
                 {
                     break;
                 }
-                string[] alergie = drug_and_alergie[1].Split(" ; ");
-
+                alergie = dis_and_alergie[1].Split(" ; ");
+                string[] al;
                 for (int j = 0; j < alergie.Length; j++)
                 {
-                    string[] al = alergie[j].Substring(1,17).Split(",");
+                    al = alergie[j].Substring(1,17).Split(",");
                     if (al[1] == "+")
                     {
                         drug_yes.Add(al[0]);
@@ -260,6 +354,7 @@ class Program
     public static void Main()
     {
         DateTime first = DateTime.Now;
+        Process proc = Process.GetCurrentProcess();
 
         string[] drugs = System.IO.File.ReadAllLines(@"../datasets/drugs.txt");
         string[] diseases = System.IO.File.ReadAllLines(@"../datasets/diseases.txt");
@@ -268,22 +363,28 @@ class Program
 
         DrugStore DStore = new DrugStore();
         DStore.create_drug_store(drugs);
+
+        AllDisease Diseases = new AllDisease();
+        Diseases.create_disease(diseases);
+        // Diseases.add_all_alergies(alergies);
+
         DStore.read("Drug_ucxnqwcpsf");
         // bug of last Drug
         DStore.delete("Drug_ucxnqwcpsf");
         DStore.read("Drug_ucxnqwcpsf");
 
-        AllDisease Diseases = new AllDisease();
-        Diseases.create_disease(diseases);
-        Diseases.add_alergie(alergies);
-        Diseases.read("Dis_xmbjdyijco");
+        Diseases.add_alergie(alergies, "Dis_iuirckvjxb");
         Diseases.read("Dis_iuirckvjxb");
         Diseases.delete("Dis_iuirckvjxb");
         Diseases.read("Dis_iuirckvjxb");
+        Diseases.read("Dis_jqgyngvqrc");
         // bug of last Dis
         Diseases.delete("Dis_xmbjdyijco");
         Diseases.read("Dis_xmbjdyijco");
 
+
+        System.Console.WriteLine(proc.PrivateMemorySize64); 
+        
         DateTime last = DateTime.Now;
         TimeSpan diff = last.Subtract(first);
         System.Console.WriteLine(diff);
