@@ -18,16 +18,19 @@ class Program
     class DrugStore
     {
         public Drug first; // reference to first Drug on list
+        public string[] drugs = System.IO.File.ReadAllLines(@"../datasets/drugs.txt");
+        public string[] effects = System.IO.File.ReadAllLines(@"../datasets/effects.txt");
+
         public DrugStore()
         { // constructor
             first = null;
         }
 
-        public void create_drug_store(string[] Drugs)
+        public void create_drug_store()
         {
-            for (int i = 0; i < Drugs.Length; i++)
+            for (int i = 0; i < drugs.Length; i++)
             {
-                string[] NEW = Drugs[i].Split(" : ");
+                string[] NEW = drugs[i].Split(" : ");
                 add(NEW[0],Convert.ToInt32(NEW[1]));
             }
         }
@@ -126,11 +129,32 @@ class Program
         public string[] diseases = System.IO.File.ReadAllLines(@"../datasets/diseases.txt");
         public string[] alergies = System.IO.File.ReadAllLines(@"../datasets/alergies.txt");
         public string[] new_dis = new string[10];
+        public string[] new_al = new string[10];
         public AllDisease()
         { // constructor
             first = null;
         }
-        public void create(string name)
+        public void create_random_alergie(string name, DrugStore DStore)
+        {
+            Random rnd = new Random();
+            int num1 = rnd.Next();
+            int num2 = rnd.Next();
+            int len = DStore.drugs.Length;
+            num1 = Convert.ToInt32(num1 / len);
+            num2 = Convert.ToInt32(num2 / len);
+            string[] dis1 = DStore.drugs[num1].Split(" : ");
+            string[] dis2 = DStore.drugs[num2].Split(" : ");
+            string alergie = name + " : " + "(" + dis1[0] + "," + "+) ; " + "(" + dis2[0] + "," + "-)";
+            for (int i = 0; i < new_al.Length; i++)
+            {
+                if (new_al[i] == "" || new_al[i] == null)
+                {
+                    new_al[i] = alergie;
+                    break;
+                }
+            }            
+        }
+        public void create(string name, DrugStore DStore)
         {
             Disease NEW = new Disease(name);
             if (first == null)
@@ -150,6 +174,7 @@ class Program
                     break;
                 }
             }
+            create_random_alergie(name, DStore);
         }
         public void add_disease_to_linkedlist()
         {
@@ -305,17 +330,28 @@ class Program
         }
         public void delete_from_array(string name)
         {
-            bool is_deleted = false;
+            bool dis_deleted = false;
+            bool al_deleted = false;
             for (int i = 0; i < new_dis.Length; i++)
             {
                 if (new_dis[i] == name)
                 {
                     new_dis[i] = "";
-                    is_deleted = true;
+                    dis_deleted = true;
                     break;
                 }
             }
-            if (!is_deleted)
+            for (int i = 0; i < new_al.Length; i++)
+            {
+                string[] alergie = new_al[i].Split(" : ");
+                if (alergie[0] == name)
+                {
+                    new_al[i] = "";
+                    al_deleted = true;
+                    break;
+                }
+            }
+            if (!(dis_deleted && al_deleted))
             {
                 for (int i = 0; i < diseases.Length; i++)
                 {
@@ -367,10 +403,19 @@ class Program
                     sw_al.WriteLine(alergies[i]);
                 }
             }
+            for (int i = 0; i < new_al.Length; i++)
+            {
+                if (new_al[i] != "" && new_al[i] != null)
+                {
+                    sw_al.WriteLine(new_al[i]);
+                }
+            }
             sw_al.Close();  
+
             diseases = System.IO.File.ReadAllLines(@"../datasets/diseases.txt");
             alergies = System.IO.File.ReadAllLines(@"../datasets/alergies.txt");       
             new_dis = new string [10];
+            new_al = new string [10];
         }
         public void delete(string name)
         {
@@ -408,17 +453,19 @@ class Program
         DateTime first = DateTime.Now;
         Process proc = Process.GetCurrentProcess();
 
-        string[] drugs = System.IO.File.ReadAllLines(@"../datasets/drugs.txt");
+        // string[] drugs = System.IO.File.ReadAllLines(@"../datasets/drugs.txt");
         // string[] diseases = System.IO.File.ReadAllLines(@"../datasets/diseases.txt");
-        string[] effects = System.IO.File.ReadAllLines(@"../datasets/effects.txt");
+        // string[] effects = System.IO.File.ReadAllLines(@"../datasets/effects.txt");
         // string[] alergies = System.IO.File.ReadAllLines(@"../datasets/alergies.txt");
 
         DrugStore DStore = new DrugStore();
-        DStore.create_drug_store(drugs);
+        DStore.create_drug_store();
 
         AllDisease Diseases = new AllDisease();
         Diseases.add_disease_to_linkedlist();
         // Diseases.add_all_alergies();
+
+
         DStore.read("Drug_ucxnqwcpsf");
         DStore.delete("Drug_ucxnqwcpsf");
         DStore.read("Drug_ucxnqwcpsf");
@@ -427,17 +474,14 @@ class Program
 
         // Diseases.read("Dis_lowcidahyh");
         // Diseases.add_alergie("Dis_lowcidahyh");
-        Diseases.create("Dis_idsgpsdccc");
-        Diseases.create("Dis_gqtztljisr");
-        Diseases.create("Dis_ucxnqwcpsf");
+        Diseases.create("Dis_idsgpsdccc", DStore);
         Diseases.read("Dis_idsgpsdccc");
-        Diseases.delete("Dis_idsgpsdccc");
+        // Diseases.delete("Dis_idsgpsdccc");
         Diseases.read("Dis_idsgpsdccc");
         Diseases.read("Dis_gqtztljisr");
         Diseases.delete("Dis_gqtztljisr");
         Diseases.read("Dis_gqtztljisr");
         Diseases.delete("Dis_ucxnqwcpsf");
-        Diseases.create("Dis_ucxnqwcpsf");
         Diseases.read("Dis_idsgpsdccc");
         Diseases.read("Dis_ucxnqwcpsf");
         Diseases.read("Dis_kgqwmwahfp");
