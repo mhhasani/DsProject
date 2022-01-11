@@ -353,7 +353,7 @@ class Program
             }
             for (int i = 0; i < new_dis.Length; i++)
             {
-                if (new_dis[i] != "")
+                if (new_dis[i] != "" && new_dis[i] != null)
                 {
                     sw_dis.WriteLine(new_dis[i]);
                 }
@@ -370,6 +370,7 @@ class Program
             sw_al.Close();  
             diseases = System.IO.File.ReadAllLines(@"../datasets/diseases.txt");
             alergies = System.IO.File.ReadAllLines(@"../datasets/alergies.txt");       
+            new_dis = new string [10];
         }
         public void delete(string name)
         {
@@ -436,8 +437,11 @@ class Program
         Diseases.delete("Dis_gqtztljisr");
         Diseases.read("Dis_gqtztljisr");
         Diseases.delete("Dis_ucxnqwcpsf");
+        Diseases.create("Dis_ucxnqwcpsf");
+        Diseases.read("Dis_idsgpsdccc");
+        Diseases.read("Dis_ucxnqwcpsf");
+        Diseases.read("Dis_kgqwmwahfp");
         Diseases.save();
-
 
         System.Console.WriteLine("--------------");
         System.Console.Write("memory: ");
