@@ -40,7 +40,6 @@ class Program
             }
             Console.Write("\n");
         }
-
         public void read(string name)
         {
             Drug drug = find(name);
@@ -59,8 +58,6 @@ class Program
             }
 
         }
-
-
         public void add(string name, int price)
         {
             Drug NEW = new Drug(name, price);
@@ -74,7 +71,6 @@ class Program
                 first = NEW;
             }
         }
-
         public Drug find(string name)
         {
             Drug current = first;
@@ -84,7 +80,6 @@ class Program
             }
             return current;
         }
-
         public void delete(string name)
         {
             Drug to_delete = find(name);
@@ -130,17 +125,46 @@ class Program
         public Disease first; // reference to first Drug on list
         public string[] diseases = System.IO.File.ReadAllLines(@"../datasets/diseases.txt");
         public string[] alergies = System.IO.File.ReadAllLines(@"../datasets/alergies.txt");
-
+        public string[] new_dis = new string[10];
         public AllDisease()
         { // constructor
             first = null;
         }
-
-        public void create_disease()
+        public void create(string name)
+        {
+            Disease NEW = new Disease(name);
+            if (first == null)
+            {
+                first = NEW;
+            }
+            else
+            {
+                NEW.next = first;
+                first = NEW;
+            }
+            for (int i = 0; i < new_dis.Length; i++)
+            {
+                if (new_dis[i] == "" || new_dis[i] == null)
+                {
+                    new_dis[i] = name;
+                    break;
+                }
+            }
+        }
+        public void add_disease_to_linkedlist()
         {
             for (int i = 0; i < diseases.Length; i++)
             {
-                add(diseases[i]);
+                Disease NEW = new Disease(diseases[i]);
+                if (first == null)
+                {
+                    first = NEW;
+                }
+                else
+                {
+                    NEW.next = first;
+                    first = NEW;
+                }
             }
         }
         public void print()
@@ -152,7 +176,6 @@ class Program
             }
             Console.Write("\n");
         }
-
         public void read(string name)
         {
             Disease disease = find(name);
@@ -164,6 +187,7 @@ class Program
             }
             else
             {
+                add_alergie(name);
                 System.Console.WriteLine(disease.name);
                 if (disease.Drug_yes != null)
                 {
@@ -187,22 +211,6 @@ class Program
                 }
             }
         }
-
-
-        public void add(string name)
-        {
-            Disease NEW = new Disease(name);
-            if (first == null)
-            {
-                first = NEW;
-            }
-            else
-            {
-                NEW.next = first;
-                first = NEW;
-            }
-        }
-
         public void add_alergie(string name)
         {
             Disease disease = find(name);
@@ -247,7 +255,6 @@ class Program
                 disease.Drug_no = drug_no.ToArray();
             }
         }
-
         public void add_all_alergies()
         {
             System.Console.WriteLine("add alergies...");
@@ -287,7 +294,6 @@ class Program
                 disease.Drug_no = drug_no.ToArray();
             }
         }
-
         public Disease find(string name)
         {
             Disease current = first;
@@ -297,26 +303,39 @@ class Program
             }
             return current;
         }
-
         public void delete_from_array(string name)
         {
-            for (int i = 0; i < diseases.Length; i++)
+            bool is_deleted = false;
+            for (int i = 0; i < new_dis.Length; i++)
             {
-                if (diseases[i] == name)
+                if (new_dis[i] == name)
                 {
-                    diseases[i] = "";
+                    new_dis[i] = "";
+                    is_deleted = true;
                     break;
                 }
             }
-            for (int i = 0; i < alergies.Length; i++)
+            if (!is_deleted)
             {
-                string[] alergie_and_dis = alergies[i].Split(" : ");
-                if (alergie_and_dis[0] == name)
+                for (int i = 0; i < diseases.Length; i++)
                 {
-                    alergies[i] = "";
-                    break;
+                    if (diseases[i] == name)
+                    {
+                        diseases[i] = "";
+                        break;
+                    }
                 }
+                for (int i = 0; i < alergies.Length; i++)
+                {
+                    string[] alergie_and_dis = alergies[i].Split(" : ");
+                    if (alergie_and_dis[0] == name)
+                    {
+                        alergies[i] = "";
+                        break;
+                    }
+                }               
             }
+
         }
         public void save()
         {
@@ -332,6 +351,13 @@ class Program
                     sw_dis.WriteLine(diseases[i]);
                 }
             }
+            for (int i = 0; i < new_dis.Length; i++)
+            {
+                if (new_dis[i] != "")
+                {
+                    sw_dis.WriteLine(new_dis[i]);
+                }
+            }
             sw_dis.Close(); 
 
             for (int i = 0; i < alergies.Length; i++)
@@ -345,7 +371,6 @@ class Program
             diseases = System.IO.File.ReadAllLines(@"../datasets/diseases.txt");
             alergies = System.IO.File.ReadAllLines(@"../datasets/alergies.txt");       
         }
-
         public void delete(string name)
         {
             Disease to_delete = find(name);
@@ -360,20 +385,20 @@ class Program
                 if (to_delete.name == first.name)
                 {
                     first = to_delete.next;
-                    delete_from_array(name);
-                    save();
-                    return;
                 }
-                Disease current = first;
-                Disease c = current;
-                while (current != null && current.name != to_delete.name)
+                else
                 {
-                    c = current;
-                    current = current.next;
+                    Disease current = first;
+                    Disease c = current;
+                    while (current != null && current.name != to_delete.name)
+                    {
+                        c = current;
+                        current = current.next;
+                    }
+                    c.next = to_delete.next;
                 }
-                c.next = to_delete.next;
                 delete_from_array(name);
-                save();
+                // save();
             }
         }
     }
@@ -391,19 +416,27 @@ class Program
         DStore.create_drug_store(drugs);
 
         AllDisease Diseases = new AllDisease();
-        Diseases.create_disease();
+        Diseases.add_disease_to_linkedlist();
         // Diseases.add_all_alergies();
         DStore.read("Drug_ucxnqwcpsf");
         DStore.delete("Drug_ucxnqwcpsf");
         DStore.read("Drug_ucxnqwcpsf");
 
-        Diseases.add_alergie("Dis_iuirckvjxb");
-        Diseases.read("Dis_iuirckvjxb");
-        Diseases.delete("Dis_iuirckvjxb");
-        Diseases.read("Dis_iuirckvjxb");
-        Diseases.read("Dis_xmbjdyijco");
-        Diseases.delete("Dis_xmbjdyijco");
-        Diseases.read("Dis_xmbjdyijco");
+        System.Console.WriteLine("--------------");
+
+        // Diseases.read("Dis_lowcidahyh");
+        // Diseases.add_alergie("Dis_lowcidahyh");
+        Diseases.create("Dis_idsgpsdccc");
+        Diseases.create("Dis_gqtztljisr");
+        Diseases.create("Dis_ucxnqwcpsf");
+        Diseases.read("Dis_idsgpsdccc");
+        Diseases.delete("Dis_idsgpsdccc");
+        Diseases.read("Dis_idsgpsdccc");
+        Diseases.read("Dis_gqtztljisr");
+        Diseases.delete("Dis_gqtztljisr");
+        Diseases.read("Dis_gqtztljisr");
+        Diseases.delete("Dis_ucxnqwcpsf");
+        Diseases.save();
 
 
         System.Console.WriteLine("--------------");
