@@ -3,6 +3,65 @@ using System.Diagnostics;
 
 class Program 
 {
+    public static void create_random_alergie_and_effect(string name, string[] drugs,string[] alergies, string[] effects, string[] new_eff)
+    {
+        Random rnd = new Random();
+        int num1 = rnd.Next();
+        int num2 = rnd.Next();
+        int len = alergies.Length;
+        num1 = Convert.ToInt32(num1 % len);
+        num2 = Convert.ToInt32(num2 % len);
+        string al1 = " ; " + "(" + name + "," + "+)";
+        string al2 = " ; " + "(" + name + "," + "-)";
+        alergies[num1] += al1;
+        alergies[num2] += al2;
+
+        num1 = rnd.Next();
+        num2 = rnd.Next();
+        len = drugs.Length;
+        num1 = Convert.ToInt32(num1 % len);
+        num2 = Convert.ToInt32(num2 % len);    
+        string eff1 = name + " : " + "(" + drugs[num1].Split(" : ")[0] + "," + "Eff_fcysfghfgh)";
+        string eff2 = drugs[num1].Split(" : ")[0] + " : " + "(" + name + "," + "Eff_fcysfghfgh)";
+        string eff3 = name + " : " + "(" + drugs[num2].Split(" : ")[0] + "," + "Eff_dcyslsdfdl)";
+        string eff4 = drugs[num2].Split(" : ")[0] + " : " + "(" + name + "," + "Eff_dcyslsdfdl)";
+        string[] res = {eff1, eff2, eff3, eff4};
+        for (int i = 0; i < res.Length; i++)
+        {
+            for (int j = 0; j < effects.Length; j++)
+            {
+                if (effects[j].Split(" : ")[0] == res[i].Split(" : ")[0])
+                {
+                    effects[j] += " ; " + res[i].Split(" : ")[1];
+                    res[i] = "";
+                    break;
+                }
+            }
+        }
+        for (int i = 0; i < res.Length; i++)
+        {
+            for (int j = 0; j < new_eff.Length; j++)
+            {
+                if (new_eff[j] == "" && res[i] != "")
+                {
+                    new_eff[j] = res[i];
+                    break;
+                }
+            }
+        }
+    }
+    public static void create_drug(string name, string price, string[] drugs, string[] new_drug, string[] new_eff, string[] alergies, string[] effects)
+    {
+        for (int i = 0; i < new_drug.Length; i++)
+        {
+            if (new_drug[i] == "" || new_drug[i] == null)
+            {
+                new_drug[i] = name + " : " + price;
+                break;
+            }
+        }
+        create_random_alergie_and_effect(name, drugs, alergies, effects, new_eff);
+    }
     public static bool serach_in_drugs(string name, string[] drugs)
     {
         for (int i = 0; i < drugs.Length; i++)
@@ -55,7 +114,7 @@ class Program
                     System.Console.WriteLine(res);
                     break;
                 }
-            }
+            }                
         }          
     }
     public static void serach_drug(string name, string[] drugs, string[] effects, string[] alergies, string[] new_drug, string[] new_eff, string[] new_al)
@@ -75,7 +134,7 @@ class Program
         else if (is_in_new_drug)
         {
             serach_in_effects(name, new_eff);
-            serach_in_alergies(name, new_al);              
+            // serach_in_alergies(name, new_al);              
         }
         else
         {
@@ -90,8 +149,8 @@ class Program
         int num1 = rnd.Next();
         int num2 = rnd.Next();
         int len = drugs.Length;
-        num1 = Convert.ToInt32(num1 / len);
-        num2 = Convert.ToInt32(num2 / len);
+        num1 = Convert.ToInt32(num1 % len);
+        num2 = Convert.ToInt32(num2 % len);
         string[] dis1 = drugs[num1].Split(" : ");
         string[] dis2 = drugs[num2].Split(" : ");
         string alergie = name + " : " + "(" + dis1[0] + "," + "+) ; " + "(" + dis2[0] + "," + "-)";
@@ -222,12 +281,16 @@ class Program
             }               
         }
     }
-    public static void save_dis(string[] diseases, string[] alergies, string[] new_dis, string[] new_al)
+    public static void save(string[] diseases, string[] alergies, string[] drugs, string[] effects, string[] new_dis, string[] new_al, string[] new_drug, string[] new_eff)
     {
         File.Delete(@"../datasets/diseases.txt");
         File.Delete(@"../datasets/alergies.txt");
+        File.Delete(@"../datasets/effects.txt");
+        File.Delete(@"../datasets/drugs.txt");
         StreamWriter sw_dis = new StreamWriter(@"../datasets/diseases.txt");
         StreamWriter sw_al = new StreamWriter(@"../datasets/alergies.txt");
+        StreamWriter sw_eff = new StreamWriter(@"../datasets/effects.txt");
+        StreamWriter sw_drugs = new StreamWriter(@"../datasets/drugs.txt");
 
         for (int i = 0; i < diseases.Length; i++)
         {
@@ -261,10 +324,53 @@ class Program
         }
         sw_al.Close();  
 
+        for (int i = 0; i < drugs.Length; i++)
+        {
+            if (drugs[i] != "")
+            {
+                sw_drugs.WriteLine(drugs[i]);
+            }
+        }
+        for (int i = 0; i < new_drug.Length; i++)
+        {
+            if (new_drug[i] != "" && new_drug[i] != null)
+            {
+                sw_drugs.WriteLine(new_drug[i]);
+            }
+        }
+        sw_drugs.Close(); 
+
+        for (int i = 0; i < effects.Length; i++)
+        {
+            if (effects[i] != "")
+            {
+                sw_eff.WriteLine(effects[i]);
+            }
+        }
+        for (int i = 0; i < new_eff.Length; i++)
+        {
+            if (new_eff[i] != "" && new_eff[i] != null)
+            {
+                sw_eff.WriteLine(new_eff[i]);
+            }
+        }
+        sw_eff.Close(); 
+
         diseases = System.IO.File.ReadAllLines(@"../datasets/diseases.txt");
-        alergies = System.IO.File.ReadAllLines(@"../datasets/alergies.txt");       
+        alergies = System.IO.File.ReadAllLines(@"../datasets/alergies.txt");
+        effects = System.IO.File.ReadAllLines(@"../datasets/effects.txt");         
+        drugs = System.IO.File.ReadAllLines(@"../datasets/drugs.txt");       
         new_dis = new string [10];
         new_al = new string [10];
+        new_eff = new string [10];
+        new_drug = new string [10];
+        for (int i = 0; i < new_dis.Length; i++)
+        {
+            new_dis[i] = "";
+            new_al[i] = "";
+            new_drug[i] = "";
+            new_eff[i] = "";
+        }
     }
     public static void Main()
     {
@@ -287,12 +393,14 @@ class Program
             new_drug[i] = "";
             new_eff[i] = "";
         }
-        serach_drug("Drug_imuraovqcy", drugs, effects, alergies, new_drug, new_eff, new_al);
-        create_dis("Dis_alsjdlkasj", new_dis, new_al, drugs);
-        serach_dis("Dis_alsjdlkasj", diseases, alergies, new_dis, new_al);
-        delete_dis("Dis_mvkepinytj", diseases, alergies, new_dis, new_al);
-        serach_dis("Dis_utjolpmtkr", diseases, alergies, new_dis, new_al);
-        save_dis(diseases, alergies, new_dis, new_al);
+        // create_drug("Drug_ssksldfkld", "10000", drugs, new_drug, new_eff, alergies, effects);
+        // create_drug("Drug_ssdsfsdfsdff","1000000",drugs, new_drug, new_eff, alergies, effects);
+        serach_drug("Drug_ssdsfsdfsdff", drugs, effects, alergies, new_drug, new_eff, new_al);
+        // create_dis("Drug_ssksdsfgsdld", new_dis, new_al, drugs);
+        // delete_dis("Dis_mvkepinytj", diseases, alergies, new_dis, new_al);
+        // serach_dis("Drug_sdfgfddfgf", diseases, alergies, new_dis, new_al);
+        save(diseases, alergies, drugs, effects, new_dis, new_al, new_drug, new_eff);
+        serach_drug("Drug_ssdsfsdfsdff", drugs, effects, alergies, new_drug, new_eff, new_al);
 
 
         System.Console.WriteLine("--------------");
