@@ -3,112 +3,87 @@ using System.Diagnostics;
 
 class Program 
 {
-    class Drug 
+    public static bool serach_in_drugs(string name, string[] drugs)
     {
-        public string name; // name item (key)
-        public int price;
-        public Drug next; // next Drug in list
-        public Drug(string Name, int Price)
-        { // constructor
-            name = Name;
-            price = Price;
-            next = null;
+        for (int i = 0; i < drugs.Length; i++)
+        {
+            string[] drug_and_price = drugs[i].Split(" : ");            
+            if (drug_and_price[0] == name)
+            {
+                System.Console.WriteLine(drugs[i]);
+                return true;
+            }                
+        }
+        return false;
+    }
+    public static void serach_in_effects(string name, string[] effects)
+    {
+        for (int i = 0; i < effects.Length; i++)
+        {
+            string[] drug_and_effect = effects[i].Split(" : ");
+            if (effects[i].Split(" : ")[0] == name)
+            {
+                string[] eff = drug_and_effect[1].Split(" ; ");
+                if (eff != null)
+                {
+                    for (int j = 0; j < eff.Length; j++)
+                    {
+                        System.Console.WriteLine(eff[j]);
+                    }
+                }
+                else
+                {
+                    string res = "no drug has effect on " + name ;
+                    System.Console.WriteLine(res);
+                }
+                break;
+            }
+        }            
+    }
+    public static void serach_in_alergies(string name, string[] alergies)
+    {
+        for (int i = 0; i < alergies.Length; i++)
+        {
+            string[] dis_and_drug = alergies[i].Split(" : ");
+            string[] drug = dis_and_drug[1].Split(" ; ");
+            for (int j = 0; j < drug.Length; j++)
+            {
+                string[] dr = drug[j].Split(",");
+                if ("(" + name == dr[0])
+                {
+                    string res = "(" + dis_and_drug[0] + "," + dr[1];
+                    System.Console.WriteLine(res);
+                    break;
+                }
+            }
+        }          
+    }
+    public static void serach_drug(string name, string[] drugs, string[] effects, string[] alergies, string[] new_drug, string[] new_eff, string[] new_al)
+    {
+        bool is_in_drug = serach_in_drugs(name, drugs);
+        bool is_in_new_drug = false;
+        
+        if (!is_in_drug)
+        {
+            is_in_new_drug = serach_in_drugs(name, new_drug);          
+        }
+        if (is_in_drug)
+        {
+            serach_in_effects(name, effects);    
+            serach_in_alergies(name, alergies);  
+        }
+        else if (is_in_new_drug)
+        {
+            serach_in_effects(name, new_eff);
+            serach_in_alergies(name, new_al);              
+        }
+        else
+        {
+            string res = name + " not found in drugs!";
+            System.Console.WriteLine(res);
         }
     }
-    class DrugStore
-    {
-        public Drug first; // reference to first Drug on list
-        public string[] drugs = System.IO.File.ReadAllLines(@"../datasets/drugs.txt");
-        public string[] effects = System.IO.File.ReadAllLines(@"../datasets/effects.txt");
-
-        public DrugStore()
-        { // constructor
-            first = null;
-        }
-        public void create_drug_store()
-        {
-            for (int i = 0; i < drugs.Length; i++)
-            {
-                string[] NEW = drugs[i].Split(" : ");
-                add(NEW[0],Convert.ToInt32(NEW[1]));
-            }
-        }
-        public void print()
-        { // display the list
-            for (Drug current = first; current != null; current = current.next)
-            {
-                Console.Write(current.name);
-                Console.Write(" ");
-            }
-            Console.Write("\n");
-        }
-        public void read(string name)
-        {
-            Drug drug = find(name);
-            if (drug == null)
-            {
-                System.Console.Write(name);
-                System.Console.Write(" not found!");
-                System.Console.WriteLine("");
-            }
-            else
-            {
-                System.Console.Write(drug.name);
-                System.Console.Write(" : ");
-                System.Console.Write(drug.price);
-                System.Console.WriteLine("");
-            }
-
-        }
-        public void add(string name, int price)
-        {
-            Drug NEW = new Drug(name, price);
-            if (first == null)
-            {
-                first = NEW;
-            }
-            else
-            {
-                NEW.next = first;
-                first = NEW;
-            }
-        }
-        public Drug find(string name)
-        {
-            Drug current = first;
-            while (current != null && current.name != name)
-            {
-                current = current.next;
-            }
-            return current;
-        }
-        public void delete(string name)
-        {
-            Drug to_delete = find(name);
-            if (to_delete == null)
-            {
-                System.Console.Write(name);
-                System.Console.Write(" not found!");
-                System.Console.WriteLine("");
-            }
-            else
-            {
-                if (to_delete.name == first.name)
-                {
-                    first = to_delete.next;
-                    return;
-                }
-                Drug current = first;
-                Drug c = current;
-                while (current != null && current.name != to_delete.name)
-                {
-                    c = current;
-                    current = current.next;
-                }
-                c.next = to_delete.next;
-            }
-        }
-    }
+    
     public static void create_random_alergie(string name, string[] new_al, string[] drugs)
     {
         Random rnd = new Random();
@@ -141,85 +116,63 @@ class Program
         }
         create_random_alergie(name, new_al, drugs);
     }
-    public static void serach_dis(string name, string[] diseases, string[] alergies, string[] new_dis, string[] new_al)
+    public static bool search_in_dis(string name, string[] diseases)
     {
-        bool is_in_dis = false;
-        bool is_in_new_dis = false;
         for (int i = 0; i < diseases.Length; i++)
         {
             if (diseases[i] == name)
             {
-                is_in_dis = true;
                 System.Console.WriteLine(name);
+                return true;
+            }
+        }  
+        return false;     
+    }
+    public static void serach_in_alergies_2(string name, string[] alergies)
+    {
+        for (int i = 0; i < alergies.Length; i++)
+        {
+            string[] dis_and_al = alergies[i].Split(" : ");
+            if (alergies[i].Split(" : ")[0] == name)
+            {
+                string[] al = dis_and_al[1].Split(" ; ");
+                if (al != null)
+                {
+                    for (int j = 0; j < al.Length; j++)
+                    {
+                        System.Console.WriteLine(al[j]);
+                    }
+                }
+                else
+                {
+                    string res = "no drug has effect on " + name ;
+                    System.Console.WriteLine(res);
+                }
                 break;
             }
-        }
+        }            
+    }
+    public static void serach_dis(string name, string[] diseases, string[] alergies, string[] new_dis, string[] new_al)
+    {
+        bool is_in_dis = search_in_dis(name, diseases);
+        bool is_in_new_dis = false;
         if (!is_in_dis)
         {
-            for (int i = 0; i < new_dis.Length; i++)
-            {
-                if (new_dis[i] == name)
-                {
-                    is_in_new_dis = true;
-                    System.Console.WriteLine(name);
-                    break;
-                }
-            }            
+            is_in_new_dis= search_in_dis(name, new_dis);        
         }
         if (is_in_dis)
         {
-            for (int i = 0; i < alergies.Length; i++)
-            {
-                string[] dis_and_al = alergies[i].Split(" : ");
-                if (alergies[i].Split(" : ")[0] == name)
-                {
-                    string[] al = dis_and_al[1].Split(" ; ");
-                    if (al != null)
-                    {
-                        for (int j = 0; j < al.Length; j++)
-                        {
-                            System.Console.WriteLine(al[j]);
-                        }
-                    }
-                    else
-                    {
-                        string res = "no drug has effect on " + name ;
-                        System.Console.WriteLine(res);
-                    }
-                    break;
-                }
-            }            
+            serach_in_alergies_2(name, alergies);         
         }
         else if (is_in_new_dis)
         {
-            for (int i = 0; i < new_al.Length; i++)
-            {
-                string[] dis_and_al = new_al[i].Split(" : ");
-                if (new_al[i].Split(" : ")[0] == name)
-                {
-                    string[] al = dis_and_al[1].Split(" ; ");
-                    if (al != null)
-                    {
-                        for (int j = 0; j < al.Length; j++)
-                        {
-                            System.Console.WriteLine(al[j]);
-                        }
-                    }
-                    else
-                    {
-                        string res = "no drug has effect on " + name ;
-                        System.Console.WriteLine(res);
-                    }
-                    break;
-                }
-            }            
+            serach_in_alergies_2(name, new_al);                    
         }
         else
         {
             string res = name + " not found in diseases!";
             System.Console.WriteLine(res);
         }
-
     }
     public static void delete_dis(string name, string[] diseases, string[] alergies, string[] new_dis, string[] new_al)
     {
@@ -325,10 +278,20 @@ class Program
         string[] effects = System.IO.File.ReadAllLines(@"../datasets/effects.txt");
         string[] new_dis = new string[10];
         string[] new_al = new string[10];
+        string[] new_drug = new string[10];
+        string[] new_eff = new string[10];
+        for (int i = 0; i < new_dis.Length; i++)
+        {
+            new_dis[i] = "";
+            new_al[i] = "";
+            new_drug[i] = "";
+            new_eff[i] = "";
+        }
+        serach_drug("Drug_imuraovqcy", drugs, effects, alergies, new_drug, new_eff, new_al);
         create_dis("Dis_alsjdlkasj", new_dis, new_al, drugs);
         serach_dis("Dis_alsjdlkasj", diseases, alergies, new_dis, new_al);
         delete_dis("Dis_mvkepinytj", diseases, alergies, new_dis, new_al);
-        serach_dis("Dis_tdeklrcfex", diseases, alergies, new_dis, new_al);
+        serach_dis("Dis_utjolpmtkr", diseases, alergies, new_dis, new_al);
         save_dis(diseases, alergies, new_dis, new_al);
 
 
