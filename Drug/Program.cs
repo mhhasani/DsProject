@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 
 class Program 
 {
@@ -143,7 +144,7 @@ class Program
             }                
         }          
     }
-    public static void search_drug(string name, string[] drugs, string[] effects, string[] alergies, string[] new_drug, string[] new_eff, string[] new_al)
+    public static bool search_drug(string name, string[] drugs, string[] effects, string[] alergies, string[] new_drug, string[] new_eff, string[] new_al)
     {
         bool is_in_drug = serach_in_drugs(name, drugs);
         bool is_in_new_drug = false;
@@ -156,17 +157,15 @@ class Program
         {
             serach_in_effects(name, effects);    
             serach_in_alergies(name, alergies);  
+            return true;
         }
         else if (is_in_new_drug)
         {
             serach_in_effects(name, new_eff);
-            serach_in_alergies(name, alergies);              
+            serach_in_alergies(name, alergies);     
+            return true;         
         }
-        else
-        {
-            string res = name + " not found in drugs!";
-            System.Console.WriteLine(res);
-        }
+        return false;
     }
     public static bool delete_from_drugs(string name, string[] drugs)
     {
@@ -189,29 +188,36 @@ class Program
             if (effects[i].Split(" : ")[0] == name)
             {
                 effects[i] = "";
-                break;
+                continue;
             }
+            try
+            {
             string[] eff = drug_and_effect[1].Split(" ; ");
             if (eff != null)
+                {
+                    for (int j = 0; j < eff.Length; j++)
+                    {
+                        if (eff[j].Split(",")[0] == "(" + name)
+                        {
+                            eff[j] = "";
+                            break;
+                        }
+                    }
+                    drug_and_effect[1] = "";
+                    for (int j = 0; j < eff.Length; j++)
+                    {
+                        if (eff[j] != "")
+                        {
+                            drug_and_effect[1] += eff[j] + " ; ";
+                        }
+                    }
+                    drug_and_effect[1] += "end";
+                    effects[i] = drug_and_effect[0] + " : " + drug_and_effect[1].Split(" ; end")[0];
+                }
+            }
+            catch(Exception)
             {
-                for (int j = 0; j < eff.Length; j++)
-                {
-                    if (eff[j].Split(",")[0] == "(" + name)
-                    {
-                        eff[j] = "";
-                        break;
-                    }
-                }
-                drug_and_effect[1] = "";
-                for (int j = 0; j < eff.Length; j++)
-                {
-                    if (eff[j] != "")
-                    {
-                        drug_and_effect[1] += eff[j] + " ; ";
-                    }
-                }
-                drug_and_effect[1] += "end";
-                effects[i] = drug_and_effect[0] + " : " + drug_and_effect[1].Split(" ; end")[0];
+                continue;
             }
         }            
     }
@@ -244,7 +250,7 @@ class Program
             }
         }      
     }
-    public static void delete_drug(string name, string[] drugs, string[] effects, string[] alergies, string[] new_drug, string[] new_eff, string[] new_al) 
+    public static bool delete_drug(string name, string[] drugs, string[] effects, string[] alergies, string[] new_drug, string[] new_eff, string[] new_al) 
     {
         bool is_in_drug = delete_from_drugs(name, drugs);
         bool is_in_new_drug = false;
@@ -257,17 +263,16 @@ class Program
         {
             delete_from_effects(name, effects);    
             delete_from_alergies(name, alergies);  
+            return true;
         }
         else if (is_in_new_drug)
         {
+            delete_from_effects(name, effects);    
             delete_from_effects(name, new_eff);
-            delete_from_alergies(name, alergies);              
+            delete_from_alergies(name, alergies);   
+            return true;           
         }
-        else
-        {
-            string res = name + " not found in drugs!";
-            System.Console.WriteLine(res);
-        }
+        return false;
     }   
     public static void create_random_alergie(string name, string[] new_al, string[] drugs)
     {
@@ -337,7 +342,7 @@ class Program
             }
         }            
     }
-    public static void serach_dis(string name, string[] diseases, string[] alergies, string[] new_dis, string[] new_al)
+    public static bool search_dis(string name, string[] diseases, string[] alergies, string[] new_dis, string[] new_al)
     {
         bool is_in_dis = search_in_dis(name, diseases);
         bool is_in_new_dis = false;
@@ -347,19 +352,17 @@ class Program
         }
         if (is_in_dis)
         {
-            serach_in_alergies_2(name, alergies);         
+            serach_in_alergies_2(name, alergies);  
+            return true;
         }
         else if (is_in_new_dis)
         {
-            serach_in_alergies_2(name, new_al);                    
+            serach_in_alergies_2(name, new_al);    
+            return true;                
         }
-        else
-        {
-            string res = name + " not found in diseases!";
-            System.Console.WriteLine(res);
-        }
+        return false;
     }
-    public static void delete_dis(string name, string[] diseases, string[] alergies, string[] new_dis, string[] new_al)
+    public static bool delete_dis(string name, string[] diseases, string[] alergies, string[] new_dis, string[] new_al)
     {
         bool dis_deleted = false;
         bool al_deleted = false;
@@ -383,7 +386,8 @@ class Program
                     al_deleted = true;
                     break;
                 }
-            }            
+            }     
+            return true;       
         }
 
         if (!(dis_deleted && al_deleted))
@@ -393,6 +397,7 @@ class Program
                 if (diseases[i] == name)
                 {
                     diseases[i] = "";
+                    dis_deleted = true;
                     break;
                 }
             }
@@ -402,10 +407,16 @@ class Program
                 if (alergie_and_dis[0] == name)
                 {
                     alergies[i] = "";
+                    al_deleted = true;
                     break;
                 }
             }               
         }
+        if (!dis_deleted)
+        {
+            return false;
+        }
+        return true;
     }
     public static void save(string[] diseases, string[] alergies, string[] drugs, string[] effects, string[] new_dis, string[] new_al, string[] new_drug, string[] new_eff)
     {
@@ -486,10 +497,10 @@ class Program
         alergies = System.IO.File.ReadAllLines(@"../datasets/alergies.txt");
         effects = System.IO.File.ReadAllLines(@"../datasets/effects.txt");         
         drugs = System.IO.File.ReadAllLines(@"../datasets/drugs.txt");       
-        new_dis = new string [10];
-        new_al = new string [10];
-        new_eff = new string [10];
-        new_drug = new string [10];
+        new_dis = new string [100];
+        new_al = new string [100];
+        new_eff = new string [100];
+        new_drug = new string [100];
         for (int i = 0; i < new_dis.Length; i++)
         {
             new_dis[i] = "";
@@ -500,18 +511,15 @@ class Program
     }
     public static void Main()
     {
-        DateTime first = DateTime.Now;
-        Process proc = Process.GetCurrentProcess();
-
 
         string[] diseases = System.IO.File.ReadAllLines(@"../datasets/diseases.txt");
         string[] alergies = System.IO.File.ReadAllLines(@"../datasets/alergies.txt");
         string[] drugs = System.IO.File.ReadAllLines(@"../datasets/drugs.txt");
         string[] effects = System.IO.File.ReadAllLines(@"../datasets/effects.txt");
-        string[] new_dis = new string[10];
-        string[] new_al = new string[10];
-        string[] new_drug = new string[10];
-        string[] new_eff = new string[10];
+        string[] new_dis = new string[100];
+        string[] new_al = new string[100];
+        string[] new_drug = new string[100];
+        string[] new_eff = new string[100];
         for (int i = 0; i < new_dis.Length; i++)
         {
             new_dis[i] = "";
@@ -519,27 +527,181 @@ class Program
             new_drug[i] = "";
             new_eff[i] = "";
         }
-        // create_drug("Drug_ssksldfkld", "10000", drugs, new_drug, new_eff, alergies, effects);
-        // create_drug("Drug_xcmssaereqsd","000800",drugs, new_drug, new_eff, alergies, effects);
-        // search_drug("Drug_ssdsfsdfsdff", drugs, effects, alergies, new_drug, new_eff, new_al);
-        // search_drug("Drug_xcmssaereqsd", drugs, effects, alergies, new_drug, new_eff, new_al);
-        // create_dis("Dis_ssksdsdgsdld", new_dis, new_al, drugs);
-        // serach_dis("Dis_ssksdsfgsdld", diseases, alergies, new_dis, new_al);        
-        // delete_dis("Dis_ssksdsfgsdld", diseases, alergies, new_dis, new_al);
-        // serach_dis("Dis_gzpcljhkwx", diseases, alergies, new_dis, new_al);
-        search_drug("Drug_eaeafjssoh", drugs, effects, alergies, new_drug, new_eff, new_al);        
-        delete_drug("Drug_eaeafjssoh", drugs, effects, alergies, new_drug, new_eff, new_al);
-        search_drug("Drug_eaeafjssoh", drugs, effects, alergies, new_drug, new_eff, new_al);
-        save(diseases, alergies, drugs, effects, new_dis, new_al, new_drug, new_eff);
 
+        while (true)
+        {
+            Console.Clear();
+            System.Console.WriteLine("Hi!\nplease write your request");
+            System.Console.WriteLine("1. Create Drug");
+            System.Console.WriteLine("2. Delete Drug");
+            System.Console.WriteLine("3. Search Drug");
+            System.Console.WriteLine("4. Create Disease");
+            System.Console.WriteLine("5. Delete Disease");
+            System.Console.WriteLine("6. Search Disease");
+            System.Console.WriteLine("7. Save Changes Into DataSets");
 
-        System.Console.WriteLine("--------------");
-        System.Console.Write("memory: ");
-        System.Console.WriteLine(proc.PrivateMemorySize64); 
+            int request = Convert.ToInt32(Console.ReadLine());
 
-        DateTime last = DateTime.Now;
-        TimeSpan diff = last.Subtract(first);
-        System.Console.Write("time: ");
-        System.Console.WriteLine(diff);
+            if (request == 1)
+            {
+                System.Console.Write("please write your Drug's name: ");
+                string drug = Console.ReadLine();
+                System.Console.Write("please write price of this drug: ");
+                string price = Console.ReadLine(); 
+
+                DateTime first = DateTime.Now;
+                Process proc = Process.GetCurrentProcess();
+                try
+                {
+                    create_drug(drug, price, drugs, new_drug, new_eff, alergies, effects);
+                    System.Console.WriteLine("Drug succesfully created!");
+                }
+                catch(Exception)
+                {
+                    System.Console.WriteLine("Error!");
+                }
+
+                System.Console.WriteLine("--------------");
+                System.Console.Write("memory: ");
+                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                DateTime last = DateTime.Now;
+                TimeSpan diff = last.Subtract(first);
+                System.Console.Write("time: ");
+                System.Console.WriteLine(diff);
+                System.Console.WriteLine("--------------");
+            }
+
+            else if (request == 2)
+            {
+                System.Console.Write("please write your Drug's name: ");
+                string drug = Console.ReadLine();
+
+                DateTime first = DateTime.Now;
+                Process proc = Process.GetCurrentProcess();
+
+                bool deleted = delete_drug(drug, drugs, effects, alergies, new_drug, new_eff, new_al);
+                if (deleted)
+                    System.Console.WriteLine("Drug succesfully deleted!");
+                else
+                {
+                    System.Console.WriteLine("Drug not found!");
+                }
+                System.Console.WriteLine("--------------");
+                System.Console.Write("memory: ");
+                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                DateTime last = DateTime.Now;
+                TimeSpan diff = last.Subtract(first);
+                System.Console.Write("time: ");
+                System.Console.WriteLine(diff);
+                System.Console.WriteLine("--------------");
+            }
+
+            else if (request == 3)
+            {
+                System.Console.Write("please write your Drug's name: ");
+                string drug = Console.ReadLine();
+
+                DateTime first = DateTime.Now;
+                Process proc = Process.GetCurrentProcess();
+
+                bool search = search_drug(drug, drugs, effects, alergies, new_drug, new_eff, new_al);
+                if (!search)
+                    System.Console.WriteLine("Drug not found!");
+                System.Console.WriteLine("--------------");
+                System.Console.Write("memory: ");
+                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                DateTime last = DateTime.Now;
+                TimeSpan diff = last.Subtract(first);
+                System.Console.Write("time: ");
+                System.Console.WriteLine(diff);
+                System.Console.WriteLine("--------------");
+            }
+
+            else if (request == 4)
+            {
+                System.Console.Write("please write your Disease's name: ");
+                string disease = Console.ReadLine();
+
+                DateTime first = DateTime.Now;
+                Process proc = Process.GetCurrentProcess();
+                try
+                {
+                    create_dis(disease, new_dis, new_al, drugs);
+                    System.Console.WriteLine("Disease succesfully created!");
+                }
+                catch(Exception)
+                {
+                    System.Console.WriteLine("Error!");
+                }
+
+                System.Console.WriteLine("--------------");
+                System.Console.Write("memory: ");
+                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                DateTime last = DateTime.Now;
+                TimeSpan diff = last.Subtract(first);
+                System.Console.Write("time: ");
+                System.Console.WriteLine(diff);
+                System.Console.WriteLine("--------------");
+            }
+
+            else if (request == 5)
+            {
+                System.Console.Write("please write your Disease's name: ");
+                string disease = Console.ReadLine();
+
+                DateTime first = DateTime.Now;
+                Process proc = Process.GetCurrentProcess();
+
+                bool deleted = delete_dis(disease, diseases, alergies, new_dis, new_al);
+                if (deleted)
+                    System.Console.WriteLine("Disease succesfully deleted!");
+                else
+                {
+                    System.Console.WriteLine("Disease not found!");
+                }
+                System.Console.WriteLine("--------------");
+                System.Console.Write("memory: ");
+                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                DateTime last = DateTime.Now;
+                TimeSpan diff = last.Subtract(first);
+                System.Console.Write("time: ");
+                System.Console.WriteLine(diff);
+                System.Console.WriteLine("--------------");
+            }
+
+            else if (request == 6)
+            {
+                System.Console.Write("please write your Disease's name: ");
+                string disease = Console.ReadLine();
+
+                DateTime first = DateTime.Now;
+                Process proc = Process.GetCurrentProcess();
+
+                bool search = search_dis(disease, diseases, alergies, new_dis, new_al); 
+                if (!search)
+                    System.Console.WriteLine("Disease not found!");
+                System.Console.WriteLine("--------------");
+                System.Console.Write("memory: ");
+                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                DateTime last = DateTime.Now;
+                TimeSpan diff = last.Subtract(first);
+                System.Console.Write("time: ");
+                System.Console.WriteLine(diff);
+                System.Console.WriteLine("--------------");
+            }
+            
+            else if (request == 7)
+            {
+                save(diseases, alergies, drugs, effects, new_dis, new_al, new_drug, new_eff);  
+            }
+
+            else
+            {
+                break;
+            }
+            
+            System.Console.Write("press any botton to continue: ");
+            Console.ReadKey();
+        }
     }
 }
