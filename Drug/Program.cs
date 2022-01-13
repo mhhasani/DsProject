@@ -160,7 +160,7 @@ class Program
         else if (is_in_new_drug)
         {
             serach_in_effects(name, new_eff);
-            // serach_in_alergies(name, new_al);              
+            serach_in_alergies(name, alergies);              
         }
         else
         {
@@ -420,15 +420,15 @@ class Program
             new_eff[i] = "";
         }
         // create_drug("Drug_ssksldfkld", "10000", drugs, new_drug, new_eff, alergies, effects);
-        // create_drug("Drug_xcmspoipsd","00000000",drugs, new_drug, new_eff, alergies, effects);
+        create_drug("Drug_xcmssaereqsd","000800",drugs, new_drug, new_eff, alergies, effects);
         // serach_drug("Drug_ssdsfsdfsdff", drugs, effects, alergies, new_drug, new_eff, new_al);
-        serach_drug("Drug_xcmspoipsd", drugs, effects, alergies, new_drug, new_eff, new_al);
+        serach_drug("Drug_xcmssaereqsd", drugs, effects, alergies, new_drug, new_eff, new_al);
         // create_dis("Dis_ssksdsdgsdld", new_dis, new_al, drugs);
         // serach_dis("Dis_ssksdsfgsdld", diseases, alergies, new_dis, new_al);        
         // delete_dis("Dis_ssksdsfgsdld", diseases, alergies, new_dis, new_al);
         serach_dis("Dis_gzpcljhkwx", diseases, alergies, new_dis, new_al);
         save(diseases, alergies, drugs, effects, new_dis, new_al, new_drug, new_eff);
-        serach_drug("Drug_lfkljgjsna", drugs, effects, alergies, new_drug, new_eff, new_al);
+        serach_drug("Drug_xcmssaereqsd", drugs, effects, alergies, new_drug, new_eff, new_al);
 
 
         System.Console.WriteLine("--------------");
