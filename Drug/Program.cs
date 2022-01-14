@@ -7,7 +7,7 @@ class Program
     public static string random_string()
     {
         Random random = new Random();
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         return new string(Enumerable.Repeat(chars, 10)
             .Select(s => s[random.Next(s.Length)]).ToArray());
     }
@@ -211,6 +211,11 @@ class Program
                             drug_and_effect[1] += eff[j] + " ; ";
                         }
                     }
+                    if (drug_and_effect[1] == "")
+                    {
+                        effects[i] = "";
+                        continue;
+                    }
                     drug_and_effect[1] += "end";
                     effects[i] = drug_and_effect[0] + " : " + drug_and_effect[1].Split(" ; end")[0];
                 }
@@ -226,27 +231,39 @@ class Program
         for (int i = 0; i < alergies.Length; i++)
         {
             string[] dis_and_alergie = alergies[i].Split(" : ");
-            string[] eff = dis_and_alergie[1].Split(" ; ");
-            if (eff != null)
+            try
             {
-                for (int j = 0; j < eff.Length; j++)
+                string[] eff = dis_and_alergie[1].Split(" ; ");
+                if (eff != null)
                 {
-                    if (eff[j].Split(",")[0] == "(" + name)
+                    for (int j = 0; j < eff.Length; j++)
                     {
-                        eff[j] = "";
-                        break;
+                        if (eff[j].Split(",")[0] == "(" + name)
+                        {
+                            eff[j] = "";
+                            break;
+                        }
                     }
-                }
-                dis_and_alergie[1] = "";
-                for (int j = 0; j < eff.Length; j++)
-                {
-                    if (eff[j] != "")
+                    dis_and_alergie[1] = "";
+                    for (int j = 0; j < eff.Length; j++)
                     {
-                        dis_and_alergie[1] += eff[j] + " ; ";
+                        if (eff[j] != "")
+                        {
+                            dis_and_alergie[1] += eff[j] + " ; ";
+                        }
                     }
+                    if (dis_and_alergie[1] == "")
+                    {
+                        alergies[i] = "";
+                        continue;
+                    }
+                    dis_and_alergie[1] += "end";
+                    alergies[i] = dis_and_alergie[0] + " : " + dis_and_alergie[1].Split(" ; end")[0];
                 }
-                dis_and_alergie[1] += "end";
-                alergies[i] = dis_and_alergie[0] + " : " + dis_and_alergie[1].Split(" ; end")[0];
+            }
+            catch
+            {
+                continue;
             }
         }      
     }
@@ -259,13 +276,7 @@ class Program
         {
             is_in_new_drug = delete_from_drugs(name, new_drug);          
         }
-        if (is_in_drug)
-        {
-            delete_from_effects(name, effects);    
-            delete_from_alergies(name, alergies);  
-            return true;
-        }
-        else if (is_in_new_drug)
+        if (is_in_drug || is_in_new_drug)
         {
             delete_from_effects(name, effects);    
             delete_from_effects(name, new_eff);
@@ -531,7 +542,7 @@ class Program
         while (true)
         {
             Console.Clear();
-            System.Console.WriteLine("Hi!\nplease write your request");
+            System.Console.WriteLine("please write a number:");
             System.Console.WriteLine("1. Create Drug");
             System.Console.WriteLine("2. Delete Drug");
             System.Console.WriteLine("3. Search Drug");
@@ -692,7 +703,25 @@ class Program
             
             else if (request == 7)
             {
-                save(diseases, alergies, drugs, effects, new_dis, new_al, new_drug, new_eff);  
+                DateTime first = DateTime.Now;
+                Process proc = Process.GetCurrentProcess();
+                try
+                {
+                    save(diseases, alergies, drugs, effects, new_dis, new_al, new_drug, new_eff); 
+                    System.Console.WriteLine("changes succesfully saved!");
+                }
+                catch(Exception)
+                {
+                    System.Console.WriteLine("Error!");
+                }
+                System.Console.WriteLine("--------------");
+                System.Console.Write("memory: ");
+                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                DateTime last = DateTime.Now;
+                TimeSpan diff = last.Subtract(first);
+                System.Console.Write("time: ");
+                System.Console.WriteLine(diff);
+                System.Console.WriteLine("--------------"); 
             }
 
             else
@@ -700,7 +729,7 @@ class Program
                 break;
             }
             
-            System.Console.Write("press any botton to continue: ");
+            System.Console.Write("press any key to continue: ");
             Console.ReadKey();
         }
     }
