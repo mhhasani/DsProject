@@ -102,6 +102,18 @@ class Program
         }
         return false;
     }
+    public static int serach_in_drugs_num(string name, string[] drugs)
+    {
+        for (int i = 0; i < drugs.Length; i++)
+        {
+            string[] drug_and_price = drugs[i].Split(" : ");            
+            if (drug_and_price[0] == name)
+            {
+                return i;
+            }                
+        }
+        return -1;
+    }
     public static void serach_in_effects(string name, string[] effects)
     {
         for (int i = 0; i < effects.Length; i++)
@@ -585,7 +597,8 @@ class Program
             System.Console.WriteLine("5. Delete Disease");
             System.Console.WriteLine("6. Search Disease");
             System.Console.WriteLine("7. Set Noskhe");
-            System.Console.WriteLine("8. Save Changes Into DataSets");
+            System.Console.WriteLine("8. Price Noskhe");
+            System.Console.WriteLine("9. Save Changes Into DataSets");
 
             int request = Convert.ToInt32(Console.ReadLine());
 
@@ -783,6 +796,46 @@ class Program
             }
 
             else if (request == 8)
+            {
+                System.Console.Write("please write Drug's count: ");
+                int drug_num = Convert.ToInt32(Console.ReadLine());
+                System.Console.WriteLine("please write Drugs's name: ");
+
+                int[] Drugs = new int[drug_num];
+
+                for (int i = 0; i < drug_num; i++)
+                {
+                    string drug = Console.ReadLine();
+                    int dr_and_pr = serach_in_drugs_num(drug, drugs);
+                    if (dr_and_pr!=-1)
+                        Drugs[i] = dr_and_pr;
+                    else
+                        Drugs[i] = -1;
+                }
+
+                DateTime first = DateTime.Now;
+                Process proc = Process.GetCurrentProcess();
+                int price = 0;
+                for (int i = 0; i < drug_num; i++)
+                {
+                    if (Drugs[i] != -1)
+                    {
+                        price += Convert.ToInt32(drugs[Drugs[i]].Split(" : ")[1]);
+                    }
+                }
+                System.Console.Write("price: ");
+                System.Console.WriteLine(price);
+                System.Console.WriteLine("--------------");
+                System.Console.Write("memory: ");
+                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                DateTime last = DateTime.Now;
+                TimeSpan diff = last.Subtract(first);
+                System.Console.Write("time: ");
+                System.Console.WriteLine(diff);
+                System.Console.WriteLine("--------------");
+            }
+
+            else if (request == 9)
             {
                 DateTime first = DateTime.Now;
                 Process proc = Process.GetCurrentProcess();
