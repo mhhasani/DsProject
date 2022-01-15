@@ -745,14 +745,14 @@ class Program
 
                 int[] Drugs = new int[drug_num];
 
-                int count = 0;
-                while (count != drug_num)
+                for (int i = 0; i < drug_num; i++)
                 {
                     string drug = Console.ReadLine();
                     int eff = serach_in_effects_num(drug, effects);
                     if (eff!=-1)
-                        Drugs[count] = eff;
-                    count += 1;
+                        Drugs[i] = eff;
+                    else
+                        Drugs[i] = -1;
                 }
 
                 DateTime first = DateTime.Now;
@@ -761,7 +761,7 @@ class Program
                 {
                     for (int j = i; j < drug_num; j++)
                     {
-                        if (i!=j)
+                        if (i!=j && Drugs[i] != -1 && Drugs[j] != -1)
                         {
                             string di = drug_interaction(Drugs[i], Drugs[j], effects);
                             if (di != "No")
