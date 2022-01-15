@@ -124,7 +124,19 @@ class Program
                 }
                 break;
             }
-        }            
+        }
+    }
+    public static int serach_in_effects_num(string name, string[] effects)
+    {
+        for (int i = 0; i < effects.Length; i++)
+        {
+            string[] drug_and_effect = effects[i].Split(" : ");
+            if (effects[i].Split(" : ")[0] == name)
+            {
+                return i;
+            }
+        }
+        return -1;            
     }
     public static void serach_in_alergies(string name, string[] alergies)
     {
@@ -180,6 +192,29 @@ class Program
         }
         return false;
     }    
+    public static string drug_interaction(int Drug1, int Drug2, string[] effects)
+    {
+        try
+        {
+            string[] drug_1 = effects[Drug1].Split(" : ")[1].Split(" ; ");
+            string[] drug_2 = effects[Drug2].Split(" : ")[1].Split(" ; ");
+            for (int i = 0; i < drug_1.Length; i++)
+            {
+                for (int j = 0; j < drug_2.Length; j++)
+                {
+                    if (drug_1[i].Split(",")[1] == drug_2[j].Split(",")[1])
+                    {
+                        return drug_1[i].Split(",")[1].Split(")")[0];
+                    }
+                }
+            }
+            return "No";
+        }
+        catch(Exception)
+        {
+            return "No";
+        }
+    }
     public static void delete_from_effects(string name, string[] effects)
     {
         for (int i = 0; i < effects.Length; i++)
@@ -549,7 +584,8 @@ class Program
             System.Console.WriteLine("4. Create Disease");
             System.Console.WriteLine("5. Delete Disease");
             System.Console.WriteLine("6. Search Disease");
-            System.Console.WriteLine("7. Save Changes Into DataSets");
+            System.Console.WriteLine("7. Set Noskhe");
+            System.Console.WriteLine("8. Save Changes Into DataSets");
 
             int request = Convert.ToInt32(Console.ReadLine());
 
@@ -700,8 +736,53 @@ class Program
                 System.Console.WriteLine(diff);
                 System.Console.WriteLine("--------------");
             }
-            
+
             else if (request == 7)
+            {
+                System.Console.Write("please write Drug's count: ");
+                int drug_num = Convert.ToInt32(Console.ReadLine());
+                System.Console.WriteLine("please write Drugs's name: ");
+
+                int[] Drugs = new int[drug_num];
+
+                int count = 0;
+                while (count != drug_num)
+                {
+                    string drug = Console.ReadLine();
+                    int eff = serach_in_effects_num(drug, effects);
+                    if (eff!=-1)
+                        Drugs[count] = eff;
+                    count += 1;
+                }
+
+                DateTime first = DateTime.Now;
+                Process proc = Process.GetCurrentProcess();
+                for (int i = 0; i < drug_num; i++)
+                {
+                    for (int j = i; j < drug_num; j++)
+                    {
+                        if (i!=j)
+                        {
+                            string di = drug_interaction(Drugs[i], Drugs[j], effects);
+                            if (di != "No")
+                            {
+                                string res = effects[Drugs[i]].Split(" : ")[0] + " + " + effects[Drugs[j]].Split(" : ")[0] + " -> " + di;
+                                System.Console.WriteLine(res);                                
+                            }
+                        }
+                    }
+                }
+                System.Console.WriteLine("--------------");
+                System.Console.Write("memory: ");
+                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                DateTime last = DateTime.Now;
+                TimeSpan diff = last.Subtract(first);
+                System.Console.Write("time: ");
+                System.Console.WriteLine(diff);
+                System.Console.WriteLine("--------------");
+            }
+
+            else if (request == 8)
             {
                 DateTime first = DateTime.Now;
                 Process proc = Process.GetCurrentProcess();
@@ -722,11 +803,6 @@ class Program
                 System.Console.Write("time: ");
                 System.Console.WriteLine(diff);
                 System.Console.WriteLine("--------------"); 
-            }
-
-            else
-            {
-                break;
             }
             
             System.Console.Write("press any key to continue: ");
