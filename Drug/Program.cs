@@ -89,7 +89,7 @@ class Program
         }
         create_random_alergie_and_effect(name, drugs, alergies, effects, new_eff);
     }
-    public static bool serach_in_drugs(string name, string[] drugs)
+    public static int serach_in_drugs(string name, string[] drugs)
     {
         for (int i = 0; i < drugs.Length; i++)
         {
@@ -97,10 +97,10 @@ class Program
             if (drug_and_price[0] == name)
             {
                 System.Console.WriteLine(drugs[i]);
-                return true;
+                return i;
             }                
         }
-        return false;
+        return -1;
     }
     public static int serach_in_drugs_num(string name, string[] drugs)
     {
@@ -168,22 +168,34 @@ class Program
             }                
         }          
     }
+    public static int serach_in_alergies_num(string name, string[] alergies)
+    {
+        for (int i = 0; i < alergies.Length; i++)
+        {
+            string[] drug_and_effect = alergies[i].Split(" : ");
+            if (alergies[i].Split(" : ")[0] == name)
+            {
+                return i;
+            }
+        }
+        return -1;            
+    }
     public static bool search_drug(string name, string[] drugs, string[] effects, string[] alergies, string[] new_drug, string[] new_eff, string[] new_al)
     {
-        bool is_in_drug = serach_in_drugs(name, drugs);
-        bool is_in_new_drug = false;
+        int is_in_drug = serach_in_drugs(name, drugs);
+        int is_in_new_drug = -1;
         
-        if (!is_in_drug)
+        if (is_in_drug == -1)
         {
             is_in_new_drug = serach_in_drugs(name, new_drug);          
         }
-        if (is_in_drug)
+        if (is_in_drug != -1)
         {
             serach_in_effects(name, effects);    
             serach_in_alergies(name, alergies);  
             return true;
         }
-        else if (is_in_new_drug)
+        else if (is_in_new_drug != -1)
         {
             serach_in_effects(name, new_eff);
             serach_in_alergies(name, alergies);     
@@ -226,6 +238,21 @@ class Program
         {
             return "No";
         }
+    }
+    public static string dis_interaction(int alergie, int drug, string[] alergies, string[] drugs)
+    {
+        string[] dis_and_drug = alergies[alergie].Split(" : ");
+        string[] Drugs = dis_and_drug[1].Split(" ; ");
+        string d = drugs[drug].Split(" : ")[0];
+        for (int j = 0; j < Drugs.Length; j++)
+        {
+            string[] dr = Drugs[j].Split(",");
+            if ("(" + d == dr[0] && "-)" == dr[1])
+            {
+                return d;
+            }
+        }                          
+        return "No";       
     }
     public static void delete_from_effects(string name, string[] effects)
     {
@@ -596,9 +623,10 @@ class Program
             System.Console.WriteLine("4. Create Disease");
             System.Console.WriteLine("5. Delete Disease");
             System.Console.WriteLine("6. Search Disease");
-            System.Console.WriteLine("7. Set Noskhe");
-            System.Console.WriteLine("8. Price Noskhe");
-            System.Console.WriteLine("9. Save Changes Into DataSets");
+            System.Console.WriteLine("7. Check for drug interactions in a prescription");
+            System.Console.WriteLine("8. Calculate the cost of prescription drugs");
+            System.Console.WriteLine("9. Check for the absence of alergies in a patient's prescription");
+            System.Console.WriteLine("10. Save Changes Into DataSets");
 
             int request = Convert.ToInt32(Console.ReadLine());
 
@@ -836,6 +864,67 @@ class Program
             }
 
             else if (request == 9)
+            {
+                System.Console.Write("please write Disease's count: ");
+                int dis_num = Convert.ToInt32(Console.ReadLine());
+                System.Console.WriteLine("please write Disease's name: ");
+
+                int[] Dis = new int[dis_num];
+
+                for (int i = 0; i < dis_num; i++)
+                {
+                    string dis = Console.ReadLine();
+                    int al = serach_in_alergies_num(dis, alergies);
+                    if (al!=-1)
+                        Dis[i] = al;
+                    else
+                        Dis[i] = -1;
+                }
+
+                System.Console.Write("please write Drug's count: ");
+                int drug_num = Convert.ToInt32(Console.ReadLine());
+                System.Console.WriteLine("please write Drugs's name: ");
+
+                int[] Drugs = new int[drug_num];
+
+                for (int i = 0; i < drug_num; i++)
+                {
+                    string drug = Console.ReadLine();
+                    int dr = serach_in_drugs_num(drug, drugs);
+                    if (dr!=-1)
+                        Drugs[i] = dr;
+                    else
+                        Drugs[i] = -1;
+                }
+
+                DateTime first = DateTime.Now;
+                Process proc = Process.GetCurrentProcess();
+                for (int i = 0; i < dis_num; i++)
+                {
+                    for (int j = i; j < drug_num; j++)
+                    {
+                        if (Dis[i] != -1 && Drugs[j] != -1)
+                        {
+                            string di = dis_interaction(Dis[i], Drugs[j], alergies, drugs);
+                            if (di != "No")
+                            {
+                                string res = drugs[Drugs[j]].Split(" : ")[0] + " has bad effect on " + alergies[Dis[i]].Split(" : ")[0];
+                                System.Console.WriteLine(res);                                
+                            }
+                        }
+                    }
+                }
+                System.Console.WriteLine("--------------");
+                System.Console.Write("memory: ");
+                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                DateTime last = DateTime.Now;
+                TimeSpan diff = last.Subtract(first);
+                System.Console.Write("time: ");
+                System.Console.WriteLine(diff);
+                System.Console.WriteLine("--------------");
+            }
+
+            else if (request == 10)
             {
                 DateTime first = DateTime.Now;
                 Process proc = Process.GetCurrentProcess();
