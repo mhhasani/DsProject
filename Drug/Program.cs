@@ -629,30 +629,59 @@ class Program
             System.Console.WriteLine("10. General increase or decrease in drug prices");
             System.Console.WriteLine("11. Save Changes Into DataSets");
 
-            int request = Convert.ToInt32(Console.ReadLine());
+            int request;
+            while (true)
+            {
+                try
+                {
+                    request = Convert.ToInt32(Console.ReadLine());
+                    break;
+                }
+                catch
+                {
+                    Console.WriteLine("your request must be an int 1 to 11");
+                }
+            }
 
             if (request == 1)
             {
                 System.Console.Write("please write your Drug's name: ");
                 string drug = Console.ReadLine();
                 System.Console.Write("please write price of this drug: ");
-                string price = Console.ReadLine(); 
+                int price;
+                while (true)
+                {
+                    try
+                    {
+                        price = Convert.ToInt32(Console.ReadLine());
+                        if (price <= 0)
+                        {
+                            throw new Exception();
+                        }
+                        break;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("price must be int and positive number");
+                    }
+                }
+
 
                 DateTime first = DateTime.Now;
                 Process proc = Process.GetCurrentProcess();
                 try
                 {
-                    create_drug(drug, price, drugs, new_drug, new_eff, alergies, effects);
+                    create_drug(drug, Convert.ToString(price), drugs, new_drug, new_eff, alergies, effects);
                     System.Console.WriteLine("Drug succesfully created!");
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     System.Console.WriteLine("Error!");
                 }
 
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
-                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                System.Console.WriteLine(proc.PrivateMemorySize64);
                 DateTime last = DateTime.Now;
                 TimeSpan diff = last.Subtract(first);
                 System.Console.Write("time: ");
@@ -663,7 +692,23 @@ class Program
             else if (request == 2)
             {
                 System.Console.Write("please write your Drug's name: ");
-                string drug = Console.ReadLine();
+                string drug;
+                while (true)
+                {
+                    try
+                    {
+                        drug = Console.ReadLine();
+                        if (drug == "")
+                        {
+                            throw new Exception();
+                        }
+                        break;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("please enter an input");
+                    }
+                }
 
                 DateTime first = DateTime.Now;
                 Process proc = Process.GetCurrentProcess();
@@ -677,7 +722,7 @@ class Program
                 }
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
-                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                System.Console.WriteLine(proc.PrivateMemorySize64);
                 DateTime last = DateTime.Now;
                 TimeSpan diff = last.Subtract(first);
                 System.Console.Write("time: ");
@@ -688,7 +733,23 @@ class Program
             else if (request == 3)
             {
                 System.Console.Write("please write your Drug's name: ");
-                string drug = Console.ReadLine();
+                string drug;
+                while (true)
+                {
+                    try
+                    {
+                        drug = Console.ReadLine();
+                        if (drug == "")
+                        {
+                            throw new Exception();
+                        }
+                        break;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("please enter an input");
+                    }
+                }
 
                 DateTime first = DateTime.Now;
                 Process proc = Process.GetCurrentProcess();
@@ -698,7 +759,7 @@ class Program
                     System.Console.WriteLine("Drug not found!");
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
-                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                System.Console.WriteLine(proc.PrivateMemorySize64);
                 DateTime last = DateTime.Now;
                 TimeSpan diff = last.Subtract(first);
                 System.Console.Write("time: ");
@@ -718,14 +779,14 @@ class Program
                     create_dis(disease, new_dis, new_al, drugs);
                     System.Console.WriteLine("Disease succesfully created!");
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     System.Console.WriteLine("Error!");
                 }
 
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
-                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                System.Console.WriteLine(proc.PrivateMemorySize64);
                 DateTime last = DateTime.Now;
                 TimeSpan diff = last.Subtract(first);
                 System.Console.Write("time: ");
@@ -736,7 +797,23 @@ class Program
             else if (request == 5)
             {
                 System.Console.Write("please write your Disease's name: ");
-                string disease = Console.ReadLine();
+                string disease;
+                while (true)
+                {
+                    try
+                    {
+                        disease = Console.ReadLine();
+                        if (disease == "")
+                        {
+                            throw new Exception();
+                        }
+                        break;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("please enter an input");
+                    }
+                }
 
                 DateTime first = DateTime.Now;
                 Process proc = Process.GetCurrentProcess();
@@ -750,7 +827,7 @@ class Program
                 }
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
-                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                System.Console.WriteLine(proc.PrivateMemorySize64);
                 DateTime last = DateTime.Now;
                 TimeSpan diff = last.Subtract(first);
                 System.Console.Write("time: ");
@@ -761,17 +838,33 @@ class Program
             else if (request == 6)
             {
                 System.Console.Write("please write your Disease's name: ");
-                string disease = Console.ReadLine();
+                string disease;
+                while (true)
+                {
+                    try
+                    {
+                        disease = Console.ReadLine();
+                        if (disease == "")
+                        {
+                            throw new Exception();
+                        }
+                        break;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("please enter an input");
+                    }
+                }
 
                 DateTime first = DateTime.Now;
                 Process proc = Process.GetCurrentProcess();
 
-                bool search = search_dis(disease, diseases, alergies, new_dis, new_al); 
+                bool search = search_dis(disease, diseases, alergies, new_dis, new_al);
                 if (!search)
                     System.Console.WriteLine("Disease not found!");
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
-                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                System.Console.WriteLine(proc.PrivateMemorySize64);
                 DateTime last = DateTime.Now;
                 TimeSpan diff = last.Subtract(first);
                 System.Console.Write("time: ");
@@ -782,7 +875,19 @@ class Program
             else if (request == 7)
             {
                 System.Console.Write("please write Drug's count: ");
-                int drug_num = Convert.ToInt32(Console.ReadLine());
+                int drug_num;
+                while (true)
+                {
+                    try
+                    {
+                        drug_num = int.Parse(Console.ReadLine());
+                        break;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("drug number must be positive int");
+                    }
+                }
                 System.Console.WriteLine("please write Drugs's name: ");
 
                 int[] Drugs = new int[drug_num];
@@ -791,7 +896,7 @@ class Program
                 {
                     string drug = Console.ReadLine();
                     int eff = serach_in_effects_num(drug, effects);
-                    if (eff!=-1)
+                    if (eff != -1)
                         Drugs[i] = eff;
                     else
                     {
@@ -808,14 +913,14 @@ class Program
                 {
                     for (int j = i; j < drug_num; j++)
                     {
-                        if (i!=j && Drugs[i] != -1 && Drugs[j] != -1)
+                        if (i != j && Drugs[i] != -1 && Drugs[j] != -1)
                         {
                             string di = drug_interaction(Drugs[i], Drugs[j], effects);
                             if (di != "No")
                             {
                                 string res = effects[Drugs[i]].Split(" : ")[0] + " + " + effects[Drugs[j]].Split(" : ")[0] + " -> " + di;
-                                System.Console.WriteLine(res); 
-                                flag=true;                               
+                                System.Console.WriteLine(res);
+                                flag=true;
                             }
                         }
                     }
@@ -826,7 +931,7 @@ class Program
                 }
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
-                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                System.Console.WriteLine(proc.PrivateMemorySize64);
                 DateTime last = DateTime.Now;
                 TimeSpan diff = last.Subtract(first);
                 System.Console.Write("time: ");
@@ -846,7 +951,7 @@ class Program
                 {
                     string drug = Console.ReadLine();
                     int dr_and_pr = serach_in_drugs_num(drug, drugs);
-                    if (dr_and_pr!=-1)
+                    if (dr_and_pr != -1)
                         Drugs[i] = dr_and_pr;
                     else
                     {
@@ -870,7 +975,7 @@ class Program
                 System.Console.WriteLine(price);
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
-                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                System.Console.WriteLine(proc.PrivateMemorySize64);
                 DateTime last = DateTime.Now;
                 TimeSpan diff = last.Subtract(first);
                 System.Console.Write("time: ");
@@ -890,7 +995,7 @@ class Program
                 {
                     string dis = Console.ReadLine();
                     int al = serach_in_alergies_num(dis, alergies);
-                    if (al!=-1)
+                    if (al != -1)
                         Dis[i] = al;
                     else
                     {
@@ -910,7 +1015,7 @@ class Program
                 {
                     string drug = Console.ReadLine();
                     int dr = serach_in_drugs_num(drug, drugs);
-                    if (dr!=-1)
+                    if (dr != -1)
                         Drugs[i] = dr;
                     else
                     {
@@ -932,8 +1037,8 @@ class Program
                             if (di != "No")
                             {
                                 string res = drugs[Drugs[j]].Split(" : ")[0] + " has bad effect on " + alergies[Dis[i]].Split(" : ")[0];
-                                System.Console.WriteLine(res); 
-                                flag = true;                               
+                                System.Console.WriteLine(res);
+                                flag = true;
                             }
                         }
                     }
@@ -955,19 +1060,35 @@ class Program
             else if (request == 10)
             {
                 System.Console.Write("Please enter the inflation rate: ");
-                int inflation_rate = Convert.ToInt32(Console.ReadLine());
+                int inflation_rate;
+                while (true)
+                {
+                    try
+                    {
+                        inflation_rate = Convert.ToInt32(Console.ReadLine());
+                        if (inflation_rate < -99)
+                        {
+                            throw new Exception();
+                        }
+                        break;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("inflation_rate must be int and bigger than -99%");
+                    }
+                }
 
                 DateTime first = DateTime.Now;
                 Process proc = Process.GetCurrentProcess();
-                
+
                 for (int i = 0; i < drugs.Length; i++)
                 {
                     int price = Convert.ToInt32(drugs[i].Split(" : ")[1]);
-                    price = price + price*inflation_rate/100;
+                    price = price + price * inflation_rate / 100;
                     drugs[i] = drugs[i].Split(" : ")[0] + " : " + Convert.ToString(price);
                 }
 
-                for (int i = 0; i < new_drug.Length; i++)
+                  for (int i = 0; i < new_drug.Length; i++)
                 {
                     if (new_drug[i] != "")
                     {
@@ -976,17 +1097,17 @@ class Program
                         new_drug[i] = new_drug[i].Split(" : ")[0] + " : " + Convert.ToString(price);                        
                     }
                 }
-                
-                System.Console.WriteLine("Inflation rates were applied to drugs!");
 
+                System.Console.WriteLine("Inflation rates were applied to drugs!");
+              
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
-                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                System.Console.WriteLine(proc.PrivateMemorySize64);
                 DateTime last = DateTime.Now;
                 TimeSpan diff = last.Subtract(first);
                 System.Console.Write("time: ");
                 System.Console.WriteLine(diff);
-                System.Console.WriteLine("--------------"); 
+                System.Console.WriteLine("--------------");
             }
 
             else if (request == 11)
@@ -995,23 +1116,23 @@ class Program
                 Process proc = Process.GetCurrentProcess();
                 try
                 {
-                    save(diseases, alergies, drugs, effects, new_dis, new_al, new_drug, new_eff); 
+                    save(diseases, alergies, drugs, effects, new_dis, new_al, new_drug, new_eff);
                     System.Console.WriteLine("changes succesfully saved!");
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     System.Console.WriteLine("Error!");
                 }
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
-                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                System.Console.WriteLine(proc.PrivateMemorySize64);
                 DateTime last = DateTime.Now;
                 TimeSpan diff = last.Subtract(first);
                 System.Console.Write("time: ");
                 System.Console.WriteLine(diff);
-                System.Console.WriteLine("--------------"); 
+                System.Console.WriteLine("--------------");
             }
-            
+
             System.Console.Write("press any key to continue: ");
             Console.ReadKey();
         }
