@@ -893,7 +893,11 @@ class Program
                     if (al!=-1)
                         Dis[i] = al;
                     else
+                    {
                         Dis[i] = -1;
+                        string res = dis + "not found!";
+                        System.Console.WriteLine(res);
+                    }
                 }
 
                 System.Console.Write("please write Drug's count: ");
@@ -909,9 +913,13 @@ class Program
                     if (dr!=-1)
                         Drugs[i] = dr;
                     else
+                    {
                         Drugs[i] = -1;
+                        string res = drug + "not found!";
+                        System.Console.WriteLine(res);
+                    }
                 }
-
+                bool flag = false;
                 DateTime first = DateTime.Now;
                 Process proc = Process.GetCurrentProcess();
                 for (int i = 0; i < dis_num; i++)
@@ -924,10 +932,15 @@ class Program
                             if (di != "No")
                             {
                                 string res = drugs[Drugs[j]].Split(" : ")[0] + " has bad effect on " + alergies[Dis[i]].Split(" : ")[0];
-                                System.Console.WriteLine(res);                                
+                                System.Console.WriteLine(res); 
+                                flag = true;                               
                             }
                         }
                     }
+                }
+                if (!flag)
+                {
+                    System.Console.WriteLine("None of the drugs has bad effect on this diseases!");
                 }
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
