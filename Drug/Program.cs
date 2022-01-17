@@ -849,7 +849,11 @@ class Program
                     if (dr_and_pr!=-1)
                         Drugs[i] = dr_and_pr;
                     else
+                    {
                         Drugs[i] = -1;
+                        string res = drug + "not found!";
+                        System.Console.WriteLine(res);
+                    }
                 }
 
                 DateTime first = DateTime.Now;
