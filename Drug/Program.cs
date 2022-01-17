@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-
-class Program 
+using System.IO;
+using System.Linq;
+class Program
 {
     public static string random_string()
     {
@@ -15,9 +16,9 @@ class Program
     {
         Random rnd = new Random();
         int num = rnd.Next();
-        return Convert.ToInt32(num % len);        
+        return Convert.ToInt32(num % len);
     }
-    public static void create_random_alergie_and_effect(string name, string[] drugs,string[] alergies, string[] effects, string[] new_eff)
+    public static void create_random_alergie_and_effect(string name, string[] drugs, string[] alergies, string[] effects, string[] new_eff)
     {
         string al1 = " ; " + "(" + name + "," + "+)";
         string al2 = " ; " + "(" + name + "," + "-)";
@@ -34,7 +35,7 @@ class Program
         bool add_to_new_eff = false;
         for (int j = 0; j < 3; j++)
         {
-            rand = random_num(effects.Length);   
+            rand = random_num(effects.Length);
             string str_rand = random_string();
             string drug = effects[rand].Split(" : ")[0];
             string first_eff_name = "(" + drug + "," + "Eff_" + str_rand + ")";
@@ -61,7 +62,7 @@ class Program
                         break;
                     }
                 }
-                continue;                
+                continue;
             }
 
             for (int i = 0; i < new_eff.Length; i++)
@@ -72,8 +73,8 @@ class Program
                     {
                         new_eff[i] += eff_name;
                         break;
-                    }                        
-                }  
+                    }
+                }
             }
         }
     }
@@ -93,12 +94,12 @@ class Program
     {
         for (int i = 0; i < drugs.Length; i++)
         {
-            string[] drug_and_price = drugs[i].Split(" : ");            
+            string[] drug_and_price = drugs[i].Split(" : ");
             if (drug_and_price[0] == name)
             {
                 System.Console.WriteLine(drugs[i]);
                 return i;
-            }                
+            }
         }
         return -1;
     }
@@ -106,11 +107,11 @@ class Program
     {
         for (int i = 0; i < drugs.Length; i++)
         {
-            string[] drug_and_price = drugs[i].Split(" : ");            
+            string[] drug_and_price = drugs[i].Split(" : ");
             if (drug_and_price[0] == name)
             {
                 return i;
-            }                
+            }
         }
         return -1;
     }
@@ -131,7 +132,7 @@ class Program
                 }
                 else
                 {
-                    string res = "no drug has effect on " + name ;
+                    string res = "no drug has effect on " + name;
                     System.Console.WriteLine(res);
                 }
                 break;
@@ -148,7 +149,7 @@ class Program
                 return i;
             }
         }
-        return -1;            
+        return -1;
     }
     public static void serach_in_alergies(string name, string[] alergies)
     {
@@ -165,8 +166,8 @@ class Program
                     System.Console.WriteLine(res);
                     break;
                 }
-            }                
-        }          
+            }
+        }
     }
     public static int serach_in_alergies_num(string name, string[] alergies)
     {
@@ -178,28 +179,28 @@ class Program
                 return i;
             }
         }
-        return -1;            
+        return -1;
     }
     public static bool search_drug(string name, string[] drugs, string[] effects, string[] alergies, string[] new_drug, string[] new_eff, string[] new_al)
     {
         int is_in_drug = serach_in_drugs(name, drugs);
         int is_in_new_drug = -1;
-        
+
         if (is_in_drug == -1)
         {
-            is_in_new_drug = serach_in_drugs(name, new_drug);          
+            is_in_new_drug = serach_in_drugs(name, new_drug);
         }
         if (is_in_drug != -1)
         {
-            serach_in_effects(name, effects);    
-            serach_in_alergies(name, alergies);  
+            serach_in_effects(name, effects);
+            serach_in_alergies(name, alergies);
             return true;
         }
         else if (is_in_new_drug != -1)
         {
             serach_in_effects(name, new_eff);
-            serach_in_alergies(name, alergies);     
-            return true;         
+            serach_in_alergies(name, alergies);
+            return true;
         }
         return false;
     }
@@ -207,15 +208,15 @@ class Program
     {
         for (int i = 0; i < drugs.Length; i++)
         {
-            string[] drug_and_price = drugs[i].Split(" : ");            
+            string[] drug_and_price = drugs[i].Split(" : ");
             if (drug_and_price[0] == name)
             {
                 drugs[i] = "";
                 return true;
-            }                
+            }
         }
         return false;
-    }    
+    }
     public static string drug_interaction(int Drug1, int Drug2, string[] effects)
     {
         try
@@ -234,7 +235,7 @@ class Program
             }
             return "No";
         }
-        catch(Exception)
+        catch (Exception)
         {
             return "No";
         }
@@ -251,8 +252,8 @@ class Program
             {
                 return d;
             }
-        }                          
-        return "No";       
+        }
+        return "No";
     }
     public static void delete_from_effects(string name, string[] effects)
     {
@@ -266,8 +267,8 @@ class Program
             }
             try
             {
-            string[] eff = drug_and_effect[1].Split(" ; ");
-            if (eff != null)
+                string[] eff = drug_and_effect[1].Split(" ; ");
+                if (eff != null)
                 {
                     for (int j = 0; j < eff.Length; j++)
                     {
@@ -294,11 +295,11 @@ class Program
                     effects[i] = drug_and_effect[0] + " : " + drug_and_effect[1].Split(" ; end")[0];
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 continue;
             }
-        }            
+        }
     }
     public static void delete_from_alergies(string name, string[] alergies)
     {
@@ -339,26 +340,26 @@ class Program
             {
                 continue;
             }
-        }      
+        }
     }
-    public static bool delete_drug(string name, string[] drugs, string[] effects, string[] alergies, string[] new_drug, string[] new_eff, string[] new_al) 
+    public static bool delete_drug(string name, string[] drugs, string[] effects, string[] alergies, string[] new_drug, string[] new_eff, string[] new_al)
     {
         bool is_in_drug = false;
         bool is_in_new_drug = delete_from_drugs(name, new_drug);
-        
+
         if (!is_in_new_drug)
         {
-            is_in_drug = delete_from_drugs(name, new_drug);          
+            is_in_drug = delete_from_drugs(name, new_drug);
         }
         if (is_in_drug || is_in_new_drug)
         {
-            delete_from_effects(name, effects);    
+            delete_from_effects(name, effects);
             delete_from_effects(name, new_eff);
-            delete_from_alergies(name, alergies);   
-            return true;           
+            delete_from_alergies(name, alergies);
+            return true;
         }
         return false;
-    }   
+    }
     public static void create_random_alergie(string name, string[] new_al, string[] drugs)
     {
         Random rnd = new Random();
@@ -377,7 +378,7 @@ class Program
                 new_al[i] = alergie;
                 break;
             }
-        }            
+        }
     }
     public static void create_dis(string name, string[] new_dis, string[] new_al, string[] drugs)
     {
@@ -400,8 +401,8 @@ class Program
                 System.Console.WriteLine(name);
                 return true;
             }
-        }  
-        return false;     
+        }
+        return false;
     }
     public static void serach_in_alergies_2(string name, string[] alergies)
     {
@@ -420,12 +421,12 @@ class Program
                 }
                 else
                 {
-                    string res = "no drug has effect on " + name ;
+                    string res = "no drug has effect on " + name;
                     System.Console.WriteLine(res);
                 }
                 break;
             }
-        }            
+        }
     }
     public static bool search_dis(string name, string[] diseases, string[] alergies, string[] new_dis, string[] new_al)
     {
@@ -433,17 +434,17 @@ class Program
         bool is_in_new_dis = false;
         if (!is_in_dis)
         {
-            is_in_new_dis= search_in_dis(name, new_dis);        
+            is_in_new_dis = search_in_dis(name, new_dis);
         }
         if (is_in_dis)
         {
-            serach_in_alergies_2(name, alergies);  
+            serach_in_alergies_2(name, alergies);
             return true;
         }
         else if (is_in_new_dis)
         {
-            serach_in_alergies_2(name, new_al);    
-            return true;                
+            serach_in_alergies_2(name, new_al);
+            return true;
         }
         return false;
     }
@@ -471,8 +472,8 @@ class Program
                     al_deleted = true;
                     break;
                 }
-            }     
-            return true;       
+            }
+            return true;
         }
 
         if (!(dis_deleted && al_deleted))
@@ -495,7 +496,7 @@ class Program
                     al_deleted = true;
                     break;
                 }
-            }               
+            }
         }
         if (!dis_deleted)
         {
@@ -528,7 +529,7 @@ class Program
                 sw_dis.WriteLine(new_dis[i]);
             }
         }
-        sw_dis.Close(); 
+        sw_dis.Close();
 
         for (int i = 0; i < alergies.Length; i++)
         {
@@ -544,7 +545,7 @@ class Program
                 sw_al.WriteLine(new_al[i]);
             }
         }
-        sw_al.Close();  
+        sw_al.Close();
 
         for (int i = 0; i < drugs.Length; i++)
         {
@@ -560,7 +561,7 @@ class Program
                 sw_drugs.WriteLine(new_drug[i]);
             }
         }
-        sw_drugs.Close(); 
+        sw_drugs.Close();
 
         for (int i = 0; i < effects.Length; i++)
         {
@@ -576,7 +577,7 @@ class Program
                 sw_eff.WriteLine(new_eff[i]);
             }
         }
-        sw_eff.Close(); 
+        sw_eff.Close();
 
         diseases = System.IO.File.ReadAllLines(@"../datasets/diseases.txt");
         alergies = System.IO.File.ReadAllLines(@"../datasets/alergies.txt");
@@ -628,6 +629,7 @@ class Program
             System.Console.WriteLine("9. Check for the absence of alergies in a patient's prescription");
             System.Console.WriteLine("10. General increase or decrease in drug prices");
             System.Console.WriteLine("11. Save Changes Into DataSets");
+            System.Console.WriteLine("12. quit");
 
             int request;
             while (true)
@@ -635,11 +637,15 @@ class Program
                 try
                 {
                     request = Convert.ToInt32(Console.ReadLine());
+                    if (request > 12 || request < 1)
+                    {
+                        throw new Exception();
+                    }
                     break;
                 }
                 catch
                 {
-                    Console.WriteLine("your request must be an int 1 to 11");
+                    Console.WriteLine("your request must be an int 1 to 12");
                 }
             }
 
@@ -920,7 +926,7 @@ class Program
                             {
                                 string res = effects[Drugs[i]].Split(" : ")[0] + " + " + effects[Drugs[j]].Split(" : ")[0] + " -> " + di;
                                 System.Console.WriteLine(res);
-                                flag=true;
+                                flag = true;
                             }
                         }
                     }
@@ -942,7 +948,19 @@ class Program
             else if (request == 8)
             {
                 System.Console.Write("please write Drug's count: ");
-                int drug_num = Convert.ToInt32(Console.ReadLine());
+                int drug_num;
+                while (true)
+                {
+                    try
+                    {
+                        drug_num = Convert.ToInt32(Console.ReadLine());
+                        break;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("your drug number must be positive");
+                    }
+                }
                 System.Console.WriteLine("please write Drugs's name: ");
 
                 int[] Drugs = new int[drug_num];
@@ -986,7 +1004,19 @@ class Program
             else if (request == 9)
             {
                 System.Console.Write("please write Disease's count: ");
-                int dis_num = Convert.ToInt32(Console.ReadLine());
+                int dis_num;
+                while (true)
+                {
+                    try
+                    {
+                        dis_num = Convert.ToInt32(Console.ReadLine());
+                        break;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("your disease number must be positive");
+                    }
+                }
                 System.Console.WriteLine("please write Disease's name: ");
 
                 int[] Dis = new int[dis_num];
@@ -1006,7 +1036,19 @@ class Program
                 }
 
                 System.Console.Write("please write Drug's count: ");
-                int drug_num = Convert.ToInt32(Console.ReadLine());
+                int drug_num;
+                while (true)
+                {
+                    try
+                    {
+                        drug_num = Convert.ToInt32(Console.ReadLine());
+                        break;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("your drug number must be positive");
+                    }
+                }
                 System.Console.WriteLine("please write Drugs's name: ");
 
                 int[] Drugs = new int[drug_num];
@@ -1049,7 +1091,7 @@ class Program
                 }
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
-                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                System.Console.WriteLine(proc.PrivateMemorySize64);
                 DateTime last = DateTime.Now;
                 TimeSpan diff = last.Subtract(first);
                 System.Console.Write("time: ");
@@ -1088,18 +1130,18 @@ class Program
                     drugs[i] = drugs[i].Split(" : ")[0] + " : " + Convert.ToString(price);
                 }
 
-                  for (int i = 0; i < new_drug.Length; i++)
+                for (int i = 0; i < new_drug.Length; i++)
                 {
                     if (new_drug[i] != "")
                     {
                         int price = Convert.ToInt32(new_drug[i].Split(" : ")[1]);
-                        price = price + price*inflation_rate/100;
-                        new_drug[i] = new_drug[i].Split(" : ")[0] + " : " + Convert.ToString(price);                        
+                        price = price + price * inflation_rate / 100;
+                        new_drug[i] = new_drug[i].Split(" : ")[0] + " : " + Convert.ToString(price);
                     }
                 }
 
                 System.Console.WriteLine("Inflation rates were applied to drugs!");
-              
+
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
                 System.Console.WriteLine(proc.PrivateMemorySize64);
@@ -1132,7 +1174,12 @@ class Program
                 System.Console.WriteLine(diff);
                 System.Console.WriteLine("--------------");
             }
-
+            
+            else if (request == 12)
+            {
+                break;
+            }
+            
             System.Console.Write("press any key to continue: ");
             Console.ReadKey();
         }
