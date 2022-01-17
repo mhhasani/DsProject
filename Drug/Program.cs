@@ -626,7 +626,8 @@ class Program
             System.Console.WriteLine("7. Check for drug interactions in a prescription");
             System.Console.WriteLine("8. Calculate the cost of prescription drugs");
             System.Console.WriteLine("9. Check for the absence of alergies in a patient's prescription");
-            System.Console.WriteLine("10. Save Changes Into DataSets");
+            System.Console.WriteLine("10. General increase or decrease in drug prices");
+            System.Console.WriteLine("11. Save Changes Into DataSets");
 
             int request = Convert.ToInt32(Console.ReadLine());
 
@@ -925,6 +926,31 @@ class Program
             }
 
             else if (request == 10)
+            {
+                System.Console.Write("Please enter the inflation rate: ");
+                int inflation_rate = Convert.ToInt32(Console.ReadLine());
+
+                DateTime first = DateTime.Now;
+                Process proc = Process.GetCurrentProcess();
+                
+                for (int i = 0; i < drugs.Length; i++)
+                {
+                    int price = Convert.ToInt32(drugs[i].Split(" : ")[1]);
+                    price = price + price*inflation_rate/100;
+                    drugs[i] = drugs[i].Split(" : ")[0] + " : " + Convert.ToString(price);
+                }
+
+                System.Console.WriteLine("--------------");
+                System.Console.Write("memory: ");
+                System.Console.WriteLine(proc.PrivateMemorySize64); 
+                DateTime last = DateTime.Now;
+                TimeSpan diff = last.Subtract(first);
+                System.Console.Write("time: ");
+                System.Console.WriteLine(diff);
+                System.Console.WriteLine("--------------"); 
+            }
+
+            else if (request == 11)
             {
                 DateTime first = DateTime.Now;
                 Process proc = Process.GetCurrentProcess();
