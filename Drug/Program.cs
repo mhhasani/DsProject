@@ -343,12 +343,12 @@ class Program
     }
     public static bool delete_drug(string name, string[] drugs, string[] effects, string[] alergies, string[] new_drug, string[] new_eff, string[] new_al) 
     {
-        bool is_in_drug = delete_from_drugs(name, drugs);
-        bool is_in_new_drug = false;
+        bool is_in_drug = false;
+        bool is_in_new_drug = delete_from_drugs(name, new_drug);
         
-        if (!is_in_drug)
+        if (!is_in_new_drug)
         {
-            is_in_new_drug = delete_from_drugs(name, new_drug);          
+            is_in_drug = delete_from_drugs(name, new_drug);          
         }
         if (is_in_drug || is_in_new_drug)
         {
