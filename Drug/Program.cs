@@ -794,11 +794,16 @@ class Program
                     if (eff!=-1)
                         Drugs[i] = eff;
                     else
+                    {
                         Drugs[i] = -1;
+                        string res = drug + "not found!";
+                        System.Console.WriteLine(res);
+                    }
                 }
 
                 DateTime first = DateTime.Now;
                 Process proc = Process.GetCurrentProcess();
+                bool flag = false;
                 for (int i = 0; i < drug_num; i++)
                 {
                     for (int j = i; j < drug_num; j++)
@@ -809,10 +814,15 @@ class Program
                             if (di != "No")
                             {
                                 string res = effects[Drugs[i]].Split(" : ")[0] + " + " + effects[Drugs[j]].Split(" : ")[0] + " -> " + di;
-                                System.Console.WriteLine(res);                                
+                                System.Console.WriteLine(res); 
+                                flag=true;                               
                             }
                         }
                     }
+                }
+                if (!flag)
+                {
+                    System.Console.WriteLine("None of the drugs interact with each other!");
                 }
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
