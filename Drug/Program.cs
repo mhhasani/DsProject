@@ -967,6 +967,18 @@ class Program
                     drugs[i] = drugs[i].Split(" : ")[0] + " : " + Convert.ToString(price);
                 }
 
+                for (int i = 0; i < new_drug.Length; i++)
+                {
+                    if (new_drug[i] != "")
+                    {
+                        int price = Convert.ToInt32(new_drug[i].Split(" : ")[1]);
+                        price = price + price*inflation_rate/100;
+                        new_drug[i] = new_drug[i].Split(" : ")[0] + " : " + Convert.ToString(price);                        
+                    }
+                }
+                
+                System.Console.WriteLine("Inflation rates were applied to drugs!");
+
                 System.Console.WriteLine("--------------");
                 System.Console.Write("memory: ");
                 System.Console.WriteLine(proc.PrivateMemorySize64); 
