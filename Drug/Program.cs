@@ -902,13 +902,18 @@ class Program
                 {
                     string drug = Console.ReadLine();
                     int eff = serach_in_effects_num(drug, effects);
+                    int search = serach_in_drugs_num(drug, drugs);
                     if (eff != -1)
                         Drugs[i] = eff;
+                    else if (search == -1)
+                    {
+                        Drugs[i] = -1;
+                        string res = drug + " not found!";
+                        System.Console.WriteLine(res);
+                    }
                     else
                     {
                         Drugs[i] = -1;
-                        string res = drug + "not found!";
-                        System.Console.WriteLine(res);
                     }
                 }
 
@@ -1030,7 +1035,7 @@ class Program
                     else
                     {
                         Dis[i] = -1;
-                        string res = dis + "not found!";
+                        string res = dis + " not found!";
                         System.Console.WriteLine(res);
                     }
                 }
@@ -1062,7 +1067,7 @@ class Program
                     else
                     {
                         Drugs[i] = -1;
-                        string res = drug + "not found!";
+                        string res = drug + " not found!";
                         System.Console.WriteLine(res);
                     }
                 }
