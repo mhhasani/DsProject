@@ -404,6 +404,17 @@ class Program
         }
         return false;
     }
+    public static bool search_in_dis_num(string name, string[] diseases)
+    {
+        for (int i = 0; i < diseases.Length; i++)
+        {
+            if (diseases[i] == name)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     public static void serach_in_alergies_2(string name, string[] alergies)
     {
         for (int i = 0; i < alergies.Length; i++)
@@ -1030,13 +1041,18 @@ class Program
                 {
                     string dis = Console.ReadLine();
                     int al = serach_in_alergies_num(dis, alergies);
+                    bool is_in_dis = search_in_dis_num(dis, diseases);
                     if (al != -1)
                         Dis[i] = al;
+                    else if (!is_in_dis)
+                    {
+                        Dis[i] = -1;
+                        string res = dis + "not found!";
+                        System.Console.WriteLine(res);
+                    }
                     else
                     {
                         Dis[i] = -1;
-                        string res = dis + " not found!";
-                        System.Console.WriteLine(res);
                     }
                 }
 
